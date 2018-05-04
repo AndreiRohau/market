@@ -23,17 +23,17 @@ import java.util.List;
 public class User extends BaseEntity{
 
     @Column
-    @Pattern(regexp="^[A-Z]+[a-z]+{3, 10}$", message="Name must be alphanumeric with no spaces and first capital. 3-10 letters")
+    @Pattern(regexp="^[A-Z]+[a-z]+{3,10}$", message="Name must be alphanumeric with no spaces and first capital. 3-10 letters")
     private String name;
     @Column
-    @Pattern(regexp="^[A-Z]+[a-z]+{3, 10}$", message="Surname must be alphanumeric with no spaces and first capital. 3-10 letters")
+    @Pattern(regexp="^[A-Z]+[a-z]+{3,10}$", message="Surname must be alphanumeric with no spaces and first capital. 3-10 letters")
     private String surname;
     @Column
-    @Pattern(regexp="^[a-z]+[a-z]+{3, 10}$", message="Login must be alphanumeric with no spaces and first capital. 3-10 letters")
+    @Pattern(regexp="^[a-z]+[a-z]+{3,10}$", message="Login must be alphanumeric with no spaces and first capital. 3-10 letters")
     private String login;
     @Column
     // /* <!-- Minimum 3 characters, at least one letter and one number: --> */
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{3, 10}$", message = "Login must be alphanumeric: " +
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{3,10}$", message = "Login must be alphanumeric: " +
             "at least 1 capital, 1 lower case, 1 num. 3-10 letters")
     private String password;
     @Column
