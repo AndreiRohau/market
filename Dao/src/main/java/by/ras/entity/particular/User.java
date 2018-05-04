@@ -2,6 +2,7 @@ package by.ras.entity.particular;
 
 import by.ras.entity.*;
 import lombok.*;
+import org.junit.validator.ValidateWith;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -22,25 +23,18 @@ import java.util.List;
 public class User extends BaseEntity{
 
     @Column
-    @Pattern(regexp="^[A-Z]+[a-z]+$", message="Username must be alphanumeric with no spaces and first capital")
-    @Max(value = 15, message = "Max name length should be less then 15 characters")
-    @Min(value = 1, message = "Min name length should be great then 1 characters")
+    @Pattern(regexp="^[A-Z]+[a-z]+{3, 10}$", message="Name must be alphanumeric with no spaces and first capital. 3-10 letters")
     private String name;
     @Column
-    @Pattern(regexp="^[A-Z]+[a-z]+$", message="Username must be alphanumeric with no spaces and first capital")
-    @Max(value = 15, message = "Max surname length should be less then 15 characters")
-    @Min(value = 1, message = "Min surname length should be great then 1 characters")
+    @Pattern(regexp="^[A-Z]+[a-z]+{3, 10}$", message="Surname must be alphanumeric with no spaces and first capital. 3-10 letters")
     private String surname;
     @Column
-    @Pattern(regexp="^[a-z]+[a-z]+$", message="Login must be alphanumeric with no spaces and first capital")
-    @Max(value = 15, message = "Max login length should be less then 15 characters")
-    @Min(value = 1, message = "Min login length should be great then 1 characters")
+    @Pattern(regexp="^[a-z]+[a-z]+{3, 10}$", message="Login must be alphanumeric with no spaces and first capital. 3-10 letters")
     private String login;
     @Column
-    // Minimum eight characters, at least one letter and one number:
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{3,6}$")
-    @Max(value = 10, message = "Max password length should be less then 15 characters")
-    @Min(value = 3, message = "Min password length should be great then 1 characters")
+    // /* <!-- Minimum 3 characters, at least one letter and one number: --> */
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{3, 10}$", message = "Login must be alphanumeric: " +
+            "at least 1 capital, 1 lower case, 1 num. 3-10 letters")
     private String password;
     @Column
     private Sex sex;

@@ -8,30 +8,36 @@
     <h1>Try to register!</h1><br/>
     <!--/*@thymesVar id="user" type="by.ras.entity.particular.User"*/-->
     <form action="/user/registration" method="POST" th:object="${user}">
+
         <label for="name">Name: </label>
-        <input id="name" type="text" th:field="*{name}"/><br/>
+        <p style="color:red;" th:if="${#fields.hasErrors('name')}"  th:errors="*{name}">Description errors</p>
+        <input id="name" type="text" required="true" th:field="*{name}"/><br/>
         <label for="surname">Surname: </label>
-        <input id="surname" type="text" th:field="*{surname}"/><br/>
+        <p style="color:red;" th:if="${#fields.hasErrors('surname')}"  th:errors="*{surname}">Description errors</p>
+        <input id="surname" type="text" required="true" th:field="*{surname}"/><br/>
         <label for="login">Login: </label>
-        <input id="login" type="text" th:field="*{login}"/><br/>
+        <p style="color:red;" th:if="${#fields.hasErrors('login')}"  th:errors="*{login}">Description errors</p>
+        <input id="login" type="text" required="true" th:field="*{login}"/><br/>
         <label for="password">Password: </label>
-        <input id="password" type="text" th:field="*{password}"/><br/>
+        <p style="color:red;" th:if="${#fields.hasErrors('password')}"  th:errors="*{password}">Description errors</p>
+        <input id="password" type="text" required="true" th:field="*{password}"/><br/>
 
         <ul style="list-style-type: none">
             <!--/*@thymesVar id="sexs" type="by.ras.entity.Sex"*/-->
             <li th:each="sex : ${sexs}">
-                <input title="" type="radio" th:value="${sex}" th:field="*{sex}"/>
+                <input title="" type="radio" required="true"  th:value="${sex}" th:field="*{sex}"/>
                 <span th:text="${#strings.capitalize(#strings.toLowerCase(sex))}">Each type</span>
             </li>
         </ul>
         <ul style="list-style-type: none">
             <!--/*@thymesVar id="occupations" type="by.ras.entity.Occupation"*/-->
             <li th:each="occupation : ${occupations}">
-                <input title="" type="radio" th:value="${occupation}" th:field="*{occupation}"/>
+                <input title="" type="radio"  required="true"  th:value="${occupation}" th:field="*{occupation}"/>
+                <p th:if="${#fields.hasErrors('occupation')}"  th:errors="*{occupation}">Description errors</p>
                 <span th:text="${#strings.capitalize(#strings.toLowerCase(occupation))}">Each type</span>
             </li>
         </ul>
-
+        <p th:if="${success != null}" th:text="${success}">Success text</p>
         <button type="submit">Save user</button>
     </form>
 

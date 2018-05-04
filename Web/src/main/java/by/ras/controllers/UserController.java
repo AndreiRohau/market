@@ -7,8 +7,11 @@ import by.ras.entity.particular.User;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -38,16 +41,25 @@ public class UserController {
     public void registerUser(String name){
         userService.add(new User());
     }
+
+
+
     //check registration
     @GetMapping("user/registration")
     public String goToRegisterUser(){
         return "user/registration";
     }
     @PostMapping("/user/registration")
-    public String registerUser(User user){
-        System.out.println(user);
-        return "redirect:/";
+    public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, Model model){
+        model.addAttribute("success", null);
+        if(!bindingResult.hasErrors()){
+            System.out.println("creating user : " + user);
+            model.addAttribute("success", "New User has been created");
+        }
+        return "user/registration";
     }
+
+
 
     @GetMapping("/find/{id}")
     public User findUserById(@PathVariable Long id){
