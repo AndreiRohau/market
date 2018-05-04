@@ -1,18 +1,20 @@
 package by.ras;
 
 import by.ras.entity.particular.User;
+import by.ras.exception.ServiceException;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends UserDetailsService{
 
-    User add(User user);
+    User add(User user) throws ServiceException;
 
-    User findById(long id);
-    User fingByLogin(String login);
-    List<User> findAll();
+    User findById(long id) throws ServiceException;
+    User findByLogin(String login) throws ServiceException;
+    List<User> findAll() throws ServiceException;
 
-    User update(User user);
+    User update(User user) throws ServiceException;
 
-    void delete(long id);
+    void delete(long id) throws ServiceException;
 }

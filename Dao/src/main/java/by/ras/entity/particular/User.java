@@ -2,11 +2,8 @@ package by.ras.entity.particular;
 
 import by.ras.entity.*;
 import lombok.*;
-import org.junit.validator.ValidateWith;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
@@ -20,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor @AllArgsConstructor @Builder
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "users")
-public class User extends BaseEntity{
+public class User extends BaseEntity {
 
     @Column
     @Pattern(regexp="^[A-Z]+[a-z]+{3,10}$", message="Name must be alphanumeric with no spaces and first capital. 3-10 letters")
@@ -28,7 +25,7 @@ public class User extends BaseEntity{
     @Column
     @Pattern(regexp="^[A-Z]+[a-z]+{3,10}$", message="Surname must be alphanumeric with no spaces and first capital. 3-10 letters")
     private String surname;
-    @Column
+    @Column(unique = true)
     @Pattern(regexp="^[a-z]+[a-z]+{3,10}$", message="Login must be alphanumeric with no spaces and first capital. 3-10 letters")
     private String login;
     @Column
