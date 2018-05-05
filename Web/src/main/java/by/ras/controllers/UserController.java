@@ -54,12 +54,23 @@ public class UserController{
         return "market/user/registration";
     }
     @PostMapping("/user/registration")
-    public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, Model model){
-        model.addAttribute("success", null);
+    public String registerUser(@Valid @ModelAttribute("user") User user,
+                               BindingResult bindingResult, Model model) throws WebException {
+        System.out.println("in reg method");
+        boolean success;
         if(!bindingResult.hasErrors()){
-            System.out.println("creating user : " + user);
+//            try {
+//                userService.add(new User());
+//            } catch (ServiceException e) {
+//                throw new WebException(e);
+//            }
+            System.out.println("creating new user");
+            success = true;
             model.addAttribute("success", "New User has been created");
+        } else {
+            success = false;
         }
+        model.addAttribute("success", success);
         return "market/user/registration";
     }
 

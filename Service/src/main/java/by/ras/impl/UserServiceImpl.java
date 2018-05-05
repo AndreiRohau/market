@@ -64,15 +64,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByLogin(username);
-        if(user == null){
-            throw new UsernameNotFoundException("Username doesn't exist.");
-        }
-        return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name())));
-    }
+
 
     @Override
     public User add(User user) throws ServiceException {

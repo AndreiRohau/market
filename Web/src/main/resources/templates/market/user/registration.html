@@ -13,41 +13,67 @@
 </head>
 <body>
     <h1>Try to register!</h1><br/>
+
     <!--/*@thymesVar id="user" type="by.ras.entity.particular.User"*/-->
-    <form action="/user/registration" method="POST" th:object="${user}">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-default" style="margin-top:45px">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Try to register.</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form action="/market/user/registration" method="POST" th:object="${user}">
+                            <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
 
-        <label for="name">Name: </label>
-        <p style="color:red;" th:if="${#fields.hasErrors('name')}"  th:errors="*{name}">Description errors</p>
-        <input id="name" type="text" required="true" th:field="*{name}"/><br/>
-        <label for="surname">Surname: </label>
-        <p style="color:red;" th:if="${#fields.hasErrors('surname')}"  th:errors="*{surname}">Description errors</p>
-        <input id="surname" type="text" required="true" th:field="*{surname}"/><br/>
-        <label for="login">Login: </label>
-        <p style="color:red;" th:if="${#fields.hasErrors('login')}"  th:errors="*{login}">Description errors</p>
-        <input id="login" type="text" required="true" th:field="*{login}"/><br/>
-        <label for="password">Password: </label>
-        <p style="color:red;" th:if="${#fields.hasErrors('password')}"  th:errors="*{password}">Description errors</p>
-        <input id="password" type="text" required="true" th:field="*{password}"/><br/>
-
-        <ul style="list-style-type: none">
-            <!--/*@thymesVar id="sexs" type="by.ras.entity.Sex"*/-->
-            <li th:each="sex : ${sexs}">
-                <input title="" type="radio" required="true"  th:value="${sex}" th:field="*{sex}"/>
-                <span th:text="${#strings.capitalize(#strings.toLowerCase(sex))}">Each type</span>
-            </li>
-        </ul>
-        <ul style="list-style-type: none">
-            <!--/*@thymesVar id="occupations" type="by.ras.entity.Occupation"*/-->
-            <li th:each="occupation : ${occupations}">
-                <input title="" type="radio"  required="true"  th:value="${occupation}" th:field="*{occupation}"/>
-                <p th:if="${#fields.hasErrors('occupation')}"  th:errors="*{occupation}">Description errors</p>
-                <span th:text="${#strings.capitalize(#strings.toLowerCase(occupation))}">Each type</span>
-            </li>
-        </ul>
-        <p th:if="${success != null}" th:text="${success}">Success text</p>
-        <button type="submit">Save user</button>
-    </form>
-
+                            <div class="form-group">
+                                <label for="name">Name: </label>
+                                <p style="color:red;" th:if="${#fields.hasErrors('name')}"  th:errors="*{name}">Description errors</p>
+                                <input id="name" class="form-control" type="text" required="" th:field="*{name}"/><br/>
+                            </div>
+                            <div class="form-group">
+                                <label for="surname">Surname: </label>
+                                <p style="color:red;" th:if="${#fields.hasErrors('surname')}"  th:errors="*{surname}">Description errors</p>
+                                <input id="surname" class="form-control" type="text" required="required" th:field="*{surname}"/><br/>
+                            </div>
+                            <div class="form-group">
+                                <label for="login">Login: </label>
+                                <p style="color:red;" th:if="${#fields.hasErrors('login')}"  th:errors="*{login}">Description errors</p>
+                                <input id="login" class="form-control" type="text" required="" th:field="*{login}"/><br/>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password: </label>
+                                <p style="color:red;" th:if="${#fields.hasErrors('password')}"  th:errors="*{password}">Description errors</p>
+                                <input id="password" class="form-control" type="text" required="" th:field="*{password}"/><br/>
+                            </div>
+                            <div class="form-group">
+                            <ul style="list-style-type: none">
+                                <!--/*@thymesVar id="sexs" type="by.ras.entity.Sex"*/-->
+                                <li th:each="sex : ${sexs}">
+                                    <input title="" type="radio" required="" th:value="${sex}" th:field="*{sex}"/>
+                                    <span th:text="${#strings.capitalize(#strings.toLowerCase(sex))}">Each type</span>
+                                </li>
+                            </ul>
+                            </div>
+                            <div class="form-group">
+                            <ul style="list-style-type: none">
+                                <!--/*@thymesVar id="occupations" type="by.ras.entity.Occupation"*/-->
+                                <li th:each="occupation : ${occupations}">
+                                    <input title="" type="radio"  required="" th:value="${occupation}" th:field="*{occupation}"/>
+                                    <p th:if="${#fields.hasErrors('occupation')}"  th:errors="*{occupation}">Description errors</p>
+                                    <span th:text="${#strings.capitalize(#strings.toLowerCase(occupation))}">Each type</span>
+                                </li>
+                            </ul>
+                            </div>
+                            <!--/*@thymesVar id="success" type="boolean"*/-->
+                            <p th:if="${success}">Success</p>
+                            <button type="submit" class="btn btn-default">Save user</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
