@@ -1,6 +1,7 @@
 package by.ras.impl;
 
 import by.ras.entity.particular.Contact;
+import by.ras.exception.ServiceException;
 import by.ras.repository.ContactRepository;
 import by.ras.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,23 +23,38 @@ public class ContactServiceImpl implements ContactService {
 
 
     @Override
-    public Contact addContact(Contact contact) {
-        System.out.println(contactRepository);
-        return contactRepository.saveAndFlush(contact);
+    public Contact addContact(Contact contact) throws ServiceException {
+        try {
+            return contactRepository.saveAndFlush(contact);
+        }catch (Exception e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public void delete(long id) {
-        contactRepository.delete(id);
+    public void delete(long id) throws ServiceException {
+        try {
+            contactRepository.delete(id);
+        }catch (Exception e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public Contact editContact(Contact contact) {
-        return contactRepository.saveAndFlush(contact);
+    public Contact editContact(Contact contact) throws ServiceException {
+        try {
+            return contactRepository.saveAndFlush(contact);
+        }catch (Exception e) {
+            throw new ServiceException(e);
+        }
     }
 
     @Override
-    public List<Contact> getAll() {
-        return contactRepository.findAll();
+    public List<Contact> getAll() throws ServiceException {
+        try {
+            return contactRepository.findAll();
+        }catch (Exception e) {
+            throw new ServiceException(e);
+        }
     }
 }

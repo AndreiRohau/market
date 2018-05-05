@@ -1,14 +1,13 @@
 package by.ras.controllers;
 
+import by.ras.UserService;
 import by.ras.entity.Occupation;
 import by.ras.entity.particular.User;
 import com.sun.org.apache.regexp.internal.RE;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -16,6 +15,12 @@ import java.util.Date;
 
 @Controller
 public class IndexController {
+    private final UserService userService;
+
+    @Autowired
+    public IndexController(UserService userService) {
+        this.userService = userService;
+    }
 
     @ModelAttribute("user")
     public User userModel(){
@@ -32,10 +37,12 @@ public class IndexController {
         return "index";
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.POST)
-    public String test(User user, Model model){
-        model.addAttribute("date", new Date());
-        System.out.println(user);
+    @RequestMapping(value = "/")
+    public String getLogin(@RequestParam(value = "error", required = false) String error,
+                           @RequestParam(value = "logout", required = false) String logout,
+                           Model model){
+        model.addAttribute("error", error != null);
+        model.addAttribute("logout", logout != null);
         return "index";
     }
 
@@ -48,9 +55,9 @@ public class IndexController {
         return "test";
     }
 
-    @RequestMapping(value = "/user/usertest", method = RequestMethod.GET)
+    @RequestMapping(value = "/market/user/usertest", method = RequestMethod.GET)
     public String userTest(){
-        return "user/usertest";
+        return "market/user/usertest";
     }
 
 
