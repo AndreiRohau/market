@@ -32,6 +32,15 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    public Contact findById(long id) throws ServiceException {
+        try {
+            return contactRepository.findOne(id);
+        }catch (Exception e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public void delete(long id) throws ServiceException {
         try {
             contactRepository.delete(id);

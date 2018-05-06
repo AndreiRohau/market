@@ -7,6 +7,7 @@ import by.ras.entity.Sex;
 import by.ras.entity.particular.User;
 import by.ras.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,7 +25,13 @@ public class UserController{
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
+    //constant address
+    @Value("${home.address}")
+    private String homeAddress;
+    @ModelAttribute("home")
+    public Model homeAddress(Model model){
+        return model.addAttribute("home_address", homeAddress);
+    }
     @ModelAttribute("user")
     public User userModel(){
         return new User();
@@ -49,16 +56,17 @@ public class UserController{
     }
 
     //check registration
-    @GetMapping("user/registration")
+    @GetMapping("/registration")
     public String goToRegisterUser(){
-        return "market/user/registration";
+        return "market/registration";
     }
-    @PostMapping("/user/registration")
+    @PostMapping("/registration")
     public String registerUser(@Valid @ModelAttribute("user") User user,
                                BindingResult bindingResult, Model model) throws WebException {
         System.out.println("in reg method");
         boolean success;
         if(!bindingResult.hasErrors()){
+            //realsave user in database - open to start working with DB
 //            try {
 //                userService.add(new User());
 //            } catch (ServiceException e) {
@@ -71,7 +79,7 @@ public class UserController{
             success = false;
         }
         model.addAttribute("success", success);
-        return "market/user/registration";
+        return "market/registration";
     }
 
 

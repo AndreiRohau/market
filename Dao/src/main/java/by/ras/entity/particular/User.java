@@ -39,16 +39,16 @@ public class User extends BaseEntity {
     private Occupation occupation;
     @Column
     private Role role;
-    @Column
+    @Column(name = "account_status")
     private Status status;
-    @Column
+    @Column(name = "creation_date")
     private LocalDateTime date;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Contact contact;
 
     //list of product in reserve
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "reserved_products",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -66,7 +66,7 @@ public class User extends BaseEntity {
     }
 
     //list of orders
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Order> orders = new LinkedList<>();
 
 

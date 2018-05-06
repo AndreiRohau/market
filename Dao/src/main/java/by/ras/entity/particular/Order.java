@@ -1,6 +1,7 @@
 package by.ras.entity.particular;
 
 import by.ras.entity.BaseEntity;
+import by.ras.entity.OrderStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,6 +20,10 @@ import java.util.List;
 @Table(name = "orders")
 public class Order extends BaseEntity{
 
+    @Column(name = "order_status")
+    private OrderStatus orderStatus;
+
+    @Column(name = "date_created")
     private LocalDateTime date;
 
     @ManyToOne

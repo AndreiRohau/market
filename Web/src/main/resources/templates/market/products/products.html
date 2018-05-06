@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Test</title>
+    <title>Products</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -13,15 +13,8 @@
 </head>
 <body>
     <div class="well well-sm">
-        <h2 style="text-align:center;">TEST</h2>
+        <h2 style="text-align:center;">Products</h2>
     </div>
-
-    <div th:if="${login != null}" class="well">
-        <p>Hello</p>
-        <p  th:text="${login}">___</p>
-    </div>
-
-    <br/>
 
     <div class="well">
         <p>contenttttttttttttttttttt</p>
@@ -35,27 +28,16 @@
         <p>contenttttttttttttttttttt</p>
     </div>
 
-
-
-    <hr/><br/>
-    <hr/><br/>
-    <hr/><br/>
-
-<ol class="breadcrumb">
-    <li><a th:href="${home_address} + '/'">index</a></li>
-    <li class="active">test</li>
-</ol>
-
     <div class="well well-sm">
         <h4 style="text-align:center;">Navigator</h4>
         <ol class="breadcrumb" style="text-align:center;">
             <li><a th:href="${home_address} + '/'">index</a></li>
-            <li><a th:href="${home_address} + '/market/registration'">registration</a></li>
-            <li><a th:href="${home_address} + '/test'">test</a></li>
-            <li><a th:href="${home_address} + '/market/products/products'">products</a></li>
+            <li class="active">products</li>
+            <!--<li><a th:href="${home_address} + '/market/registration'">registration</a></li>-->
+            <!--<li><a th:href="${home_address} + '/test'">test</a></li>-->
+            <!--<li><a th:href="${home_address} + '/market/products/products'">products</a></li>-->
             <li><a th:href="${home_address} + '/market/user/usermain'">usermain</a></li>
             <li><a th:href="${home_address} + '/market/admin/adminmain'">adminmain</a></li>
-            <li class="active">index</li>
         </ol>
     </div>
 </body>

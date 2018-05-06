@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Test</title>
+    <title>user_test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -13,50 +13,42 @@
 </head>
 <body>
     <div class="well well-sm">
-        <h2 style="text-align:center;">TEST</h2>
+        <h2 style="text-align:center;">UserTEST</h2>
     </div>
 
-    <div th:if="${login != null}" class="well">
-        <p>Hello</p>
-        <p  th:text="${login}">___</p>
+    <div class="well" th:if="${role} != null">
+        <p th:text="'Acting as ' + ${role}"></p>
     </div>
-
-    <br/>
 
     <div class="well">
-        <p>contenttttttttttttttttttt</p>
-        <p>contenttttttttttttttttttt</p>
-        <p>contenttttttttttttttttttt</p>
-        <p>contenttttttttttttttttttt</p>
-        <p>contenttttttttttttttttttt</p>
-        <p>contenttttttttttttttttttt</p>
-        <p>contenttttttttttttttttttt</p>
-        <p>contenttttttttttttttttttt</p>
-        <p>contenttttttttttttttttttt</p>
+        <p>userteeeeeeeeeest</p>
+        <p>userteeeeeeeeeest</p>
+        <p>userteeeeeeeeeest</p>
+        <p>userteeeeeeeeeest</p>
+        <p>userteeeeeeeeeest</p>
+        <p>userteeeeeeeeeest</p>
+        <p>userteeeeeeeeeest</p>
+        <p>userteeeeeeeeeest</p>
+        <p>userteeeeeeeeeest</p>
     </div>
-
-
-
-    <hr/><br/>
-    <hr/><br/>
-    <hr/><br/>
-
-<ol class="breadcrumb">
-    <li><a th:href="${home_address} + '/'">index</a></li>
-    <li class="active">test</li>
-</ol>
 
     <div class="well well-sm">
         <h4 style="text-align:center;">Navigator</h4>
         <ol class="breadcrumb" style="text-align:center;">
             <li><a th:href="${home_address} + '/'">index</a></li>
-            <li><a th:href="${home_address} + '/market/registration'">registration</a></li>
-            <li><a th:href="${home_address} + '/test'">test</a></li>
+            <li class="active">usertest</li>
+            <!--<li><a th:href="${home_address} + '/market/registration'">registration</a></li>-->
+            <!--<li><a th:href="${home_address} + '/test'">test</a></li>-->
+            <!--<li><a th:href="${home_address} + '/market/user/usermain'">usermain</a></li>-->
+            <!--<li><a th:href="${home_address} + '/market/admin/adminmain'">adminmain</a></li>-->
             <li><a th:href="${home_address} + '/market/products/products'">products</a></li>
-            <li><a th:href="${home_address} + '/market/user/usermain'">usermain</a></li>
-            <li><a th:href="${home_address} + '/market/admin/adminmain'">adminmain</a></li>
-            <li class="active">index</li>
         </ol>
     </div>
+    <div class="well">
+        <form action="/logout" method="GET">
+            <button type="submit" class="btn btn-default">Log out</button>
+        </form><br/>
+    </div>
+
 </body>
 </html>

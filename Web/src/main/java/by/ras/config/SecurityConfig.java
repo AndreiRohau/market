@@ -37,9 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                 ;
         http
                 .authorizeRequests()
-                .antMatchers("/market/user/registration").anonymous()
+                .antMatchers("/market/registration", "/test").anonymous()
 
-                .antMatchers("/market/*").authenticated()
+                .antMatchers("/market/products/*").authenticated()
                 .antMatchers("/market/admin/*").hasAuthority("ADMIN")
                 .antMatchers("/market/user/*").hasAuthority("CLIENT")
                 .anyRequest().authenticated()
@@ -47,6 +47,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().loginPage("/").failureUrl("/?error").permitAll()
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll()
+                .and()
+                .exceptionHandling().accessDeniedPage("/error/403")
+
 //                .and()
 //                .userDetailsService(userDetailsService)
         ;
