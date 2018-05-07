@@ -24,7 +24,7 @@ public class Product extends BaseEntity {
     @Column
     private String model;
     @Column
-    private ProductType productType;
+    private String productType;
     @Column
     private Integer price;
     @Column

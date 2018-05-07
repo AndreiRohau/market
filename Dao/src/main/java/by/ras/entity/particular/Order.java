@@ -5,6 +5,7 @@ import by.ras.entity.OrderStatus;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class Order extends BaseEntity{
     private OrderStatus orderStatus;
 
     @Column(name = "date_created")
-    private LocalDateTime date;
+    private Date date;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

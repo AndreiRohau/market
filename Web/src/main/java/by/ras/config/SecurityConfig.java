@@ -44,9 +44,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/market/user/*").hasAuthority("CLIENT")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/").failureUrl("/?error").permitAll()
+                .formLogin().loginPage("/").defaultSuccessUrl("/", true).failureUrl("/?error").permitAll()
                 .and()
-                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll()
+                //.invalidateHttpSession(true)
+                .logout().invalidateHttpSession(true).logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll()
                 .and()
                 .exceptionHandling().accessDeniedPage("/error/403")
 

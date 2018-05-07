@@ -25,7 +25,7 @@
                         <h3 class="panel-title">Try to register.</h3>
                     </div>
                     <div class="panel-body">
-                        <form action="/market/user/registration" method="POST" th:object="${user}">
+                        <form action="/market/registration" method="POST" th:object="${user}">
                             <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
 
                             <div class="form-group">
@@ -68,7 +68,7 @@
                             </ul>
                             </div>
                             <!--/*@thymesVar id="success" type="boolean"*/-->
-                            <p th:if="${success}">Success</p>
+                            <p th:text="${result}">info</p>
                             <button type="submit" class="btn btn-default">Save user</button>
                         </form>
                     </div>

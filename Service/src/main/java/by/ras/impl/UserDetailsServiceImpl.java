@@ -30,9 +30,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("Username doesn't exist.");
         }
         log.info("************************");
-        log.info(user.getRole().name());
+        log.info(user.getRole());
         log.info("************************");
         return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name())));
+                Collections.singletonList(new SimpleGrantedAuthority(user.getRole())));
     }
 }

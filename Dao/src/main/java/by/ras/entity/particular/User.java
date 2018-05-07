@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,17 +35,17 @@ public class User extends BaseEntity {
             "at least 1 capital, 1 lower case, 1 num. 3-10 letters")
     private String password;
     @Column
-    private Sex sex;
+    private String sex;
     @Column
-    private Occupation occupation;
+    private String occupation;
     @Column
-    private Role role;
+    private String role;
     @Column(name = "account_status")
-    private Status status;
+    private String status;
     @Column(name = "creation_date")
-    private LocalDateTime date;
+    private Date date;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Contact contact;
 
     //list of product in reserve
@@ -73,7 +74,7 @@ public class User extends BaseEntity {
 
 
 
-    public User(String name, String surname, String login, String password, Role role, LocalDateTime date) {
+    public User(String name, String surname, String login, String password, String role, Date date) {
         this.name = name;
         this.surname = surname;
         this.login = login;

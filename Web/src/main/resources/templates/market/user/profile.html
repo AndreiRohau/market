@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"/>
+</head>
+<body>
+
+    <div class="well well-sm">
+        <h1 style="text-align:center;" th:text="${login}+'\'s profile'">login's profile</h1>
+    </div>
+
+    <div class="well">
+        <ul class="nav nav-tabs">
+            <li role="presentation"><a th:href="${home_address} + '/market/user/usermain'">Advetising</a></li>
+            <li role="presentation" class="active"><a th:href="${home_address} + '/market/user/profile'">Profile</a></li>
+            <li role="presentation"><a th:href="${home_address} + '/market/products/products'">Products</a></li>
+            <li role="presentation"><a th:href="${home_address} + '/market/user/basket'">Basket</a></li>
+            <li role="presentation"><a th:href="${home_address} + '/market/user/orders'">Orders</a></li>
+        </ul>
+        <hr/>
+        <!--/*@thymesVar id="user" type="by.ras.entity.particular.User"*/-->
+        <div class="container">
+            <p style="color:red;" th:text="${result}">info</p>
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="panel panel-default" style="margin-top:15px">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Credentials</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form action="/market/user/profile" method="POST" th:object="${user}">
+                                <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+                                <input id="id" class="form-control" type="hidden" required="" th:field="*{id}"/><br/>
+                                <div class="form-group">
+                                    <label for="name">Name: </label>
+                                    <p style="color:red;" th:if="${#fields.hasErrors('name')}"  th:errors="*{name}">Description errors</p>
+                                    <input id="name" class="form-control" type="text" required="" th:field="*{name}"/><br/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="surname">Surname: </label>
+                                    <p style="color:red;" th:if="${#fields.hasErrors('surname')}"  th:errors="*{surname}">Description errors</p>
+                                    <input id="surname" class="form-control" type="text" required="required" th:field="*{surname}"/><br/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="login">Login: </label>
+                                    <p style="color:red;" th:if="${#fields.hasErrors('login')}"  th:errors="*{login}">Description errors</p>
+                                    <input id="login" class="form-control" type="text" required="" th:field="*{login}"/><br/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password: </label>
+                                    <p style="color:red;" th:if="${#fields.hasErrors('password')}"  th:errors="*{password}">Description errors</p>
+                                    <input id="password" class="form-control" type="text" required="" th:field="*{password}"/><br/>
+                                </div>
+                                <div class="form-group">
+                                    <ul style="list-style-type: none">
+                                        <!--/*@thymesVar id="sexs" type="by.ras.entity.Sex"*/-->
+                                        <li th:each="sex : ${sexs}">
+                                            <input title="" type="radio" required="" th:value="${sex}" th:field="*{sex}"/>
+                                            <span th:text="${#strings.capitalize(#strings.toLowerCase(sex))}">Each type</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="form-group">
+                                    <ul style="list-style-type: none">
+                                        <!--/*@thymesVar id="occupations" type="by.ras.entity.Occupation"*/-->
+                                        <li th:each="occupation : ${occupations}">
+                                            <input title="" type="radio"  required="" th:value="${occupation}" th:field="*{occupation}"/>
+                                            <p th:if="${#fields.hasErrors('occupation')}"  th:errors="*{occupation}">Description errors</p>
+                                            <span th:text="${#strings.capitalize(#strings.toLowerCase(occupation))}">Each type</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--/*@thymesVar id="success" type="boolean"*/-->
+                                <p th:if="${success}">Success</p>
+                                <button type="submit" class="btn btn-default">Edit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="panel panel-default" style="margin-top:15px">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Address</h3>
+                        </div>
+                        <div class="panel-body">
+                            <!--/*@thymesVar id="contact" type="by.ras.entity.particular.Contact"*/-->
+                            <form action="/market/user/profile" method="POST" th:object="${contact}">
+                                <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+                                <!--<div class="form-group">-->
+                                <!--<label for="id">ID: </label>-->
+                                <!--<p style="color:red;" th:if="${#fields.hasErrors('id')}"  th:errors="*{id}">Description errors</p>-->
+                                <input id="id" class="form-control" type="hidden" required="" th:field="*{id}"/><br/>
+                                <!--</div>-->
+                                <div class="form-group">
+                                    <label for="country">Country: </label>
+                                    <p style="color:red;" th:if="${#fields.hasErrors('country')}"  th:errors="*{country}">Description errors</p>
+                                    <input id="country" class="form-control" type="text" required="" th:field="*{country}"/><br/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="city">City: </label>
+                                    <p style="color:red;" th:if="${#fields.hasErrors('city')}"  th:errors="*{city}">Description errors</p>
+                                    <input id="city" class="form-control" type="text" required="required" th:field="*{city}"/><br/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="street">Street: </label>
+                                    <p style="color:red;" th:if="${#fields.hasErrors('street')}"  th:errors="*{street}">Description errors</p>
+                                    <input id="street" class="form-control" type="text" required="" th:field="*{street}"/><br/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="houseNumber">House number: </label>
+                                    <p style="color:red;" th:if="${#fields.hasErrors('houseNumber')}"  th:errors="*{houseNumber}">Description errors</p>
+                                    <input id="houseNumber" class="form-control" type="text" required="" th:field="*{houseNumber}"/><br/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phoneNumber">Phone numder: </label>
+                                    <p style="color:red;" th:if="${#fields.hasErrors('phoneNumber')}"  th:errors="*{phoneNumber}">Description errors</p>
+                                    <input id="phoneNumber" class="form-control" type="text" required="" th:field="*{phoneNumber}"/><br/>
+                                </div>
+                                <!--/*@thymesVar id="success" type="boolean"*/-->
+                                <p th:if="${success}">Success</p>
+                                <button type="submit" class="btn btn-default">Edit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="well well-sm">
+        <h4 style="text-align:center;">Navigator</h4>
+        <ol class="breadcrumb" style="text-align:center;">
+            <li><a th:href="${home_address} + '/'">index</a></li>
+            <li><a th:href="${home_address} + '/market/registration'">registration</a></li>
+            <li><a th:href="${home_address} + '/test'">test</a></li>
+            <li><a th:href="${home_address} + '/market/products/products'">products</a></li>
+            <li><a th:href="${home_address} + '/market/user/usertest'">usertest</a></li>
+            <li><a th:href="${home_address} + '/market/admin/admintest'">admintest</a></li>
+            <li class="active">index</li>
+        </ol>
+    </div>
+
+</body>
+</html>
