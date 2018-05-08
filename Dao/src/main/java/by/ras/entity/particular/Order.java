@@ -1,9 +1,11 @@
 package by.ras.entity.particular;
 
 import by.ras.entity.BaseEntity;
+import by.ras.entity.OrderStatus;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,7 +21,11 @@ import java.util.List;
 @Table(name = "orders")
 public class Order extends BaseEntity{
 
-    private LocalDateTime date;
+    @Column(name = "order_status")
+    private OrderStatus orderStatus;
+
+    @Column(name = "date_created")
+    private Date date;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

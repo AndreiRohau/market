@@ -4,80 +4,162 @@ import by.ras.entity.Occupation;
 import by.ras.entity.Role;
 import by.ras.entity.Sex;
 import by.ras.entity.Status;
+import by.ras.entity.particular.Contact;
 import by.ras.entity.particular.User;
 import by.ras.exception.ServiceException;
+import by.ras.repository.ContactRepository;
 import by.ras.repository.UserRepository;
 import by.ras.UserService;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
+import java.sql.Date;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
 @Transactional
+@Log4j
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+    private final ContactRepository contactRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, ContactRepository contactRepository) {
         this.userRepository = userRepository;
+        this.contactRepository = contactRepository;
     }
-
+/*
     @PostConstruct
     public void init() throws Exception {
-        if(userRepository.findByLogin("admin") == null){
-            User admin = User.builder()
-                    .name("Admin")
-                    .surname("Admin")
-                    .login("admin")
-                    .password("a1Z")
-                    .sex(Sex.MALE)
-                    .occupation(Occupation.EMPLOYED)
-                    .role(Role.ADMIN)
-                    .status(Status.ACTIVE)
-                    .date(LocalDateTime.now())
-                    .build();
-            userRepository.saveAndFlush(admin);
-        }
-        if(userRepository.findByLogin("user") == null){
-            User user = User.builder()
-                    .name("User")
-                    .surname("User")
-                    .login("user")
-                    .password("a1Z")
-                    .sex(Sex.MALE)
-                    .occupation(Occupation.UNEMPLOYED)
-                    .role(Role.CLIENT)
-                    .status(Status.ACTIVE)
-                    .date(LocalDateTime.now())
-                    .build();
-            userRepository.saveAndFlush(user);
+        Date date = new Date(System.currentTimeMillis());
+        try {
+            if(userRepository.findByLogin("admin") == null){
+                User admin = User.builder()
+                        .name("Admin")
+                        .surname("Admin")
+                        .login("admin")
+                        .password("a1Z")
+                        .sex(Sex.MALE.name())
+                        .occupation(Occupation.EMPLOYED.name())
+                        .role(Role.ADMIN.name())
+                        .status(Status.ACTIVE.name())
+                        .date(new Date(System.currentTimeMillis()))
+                        .build();
+                userRepository.saveAndFlush(admin);
+            }
+            if(userRepository.findByLogin("user") == null){
+                User user = User.builder()
+                        .name("User")
+                        .surname("User")
+                        .login("user")
+                        .password("a1Z")
+                        .sex(Sex.MALE.name())
+                        .occupation(Occupation.UNEMPLOYED.name())
+                        .role(Role.CLIENT.name())
+                        .status(Status.ACTIVE.name())
+                        .date(new Date(System.currentTimeMillis()))
+                        .build();
+                userRepository.saveAndFlush(user);
+                user = null;
+            }
+
+            User user = userRepository.findOne(1L);
+            Contact contact;
+            if(user.getContact() == null) {
+                contact = Contact.builder()
+                        .user(user)
+                        .country("Cyprus")
+                        .city("Sunny")
+                        .street("Money")
+                        .houseNumber("100")
+                        .phoneNumber("000000000000")
+                        .build();
+                contactRepository.saveAndFlush(contact);
+            }
+            user = userRepository.findOne(2L);
+            if(user.getContact() == null) {
+                contact = Contact.builder()
+                        .user(user)
+                        .country("Belarus")
+                        .city("Minsk")
+                        .street("Marx")
+                        .houseNumber("10")
+                        .phoneNumber("375291234567")
+                        .build();
+                contactRepository.saveAndFlush(contact);
+            }
+        }catch (Exception e) {
+            throw new ServiceException(e);
         }
     }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByLogin(username);
-        if(user == null){
-            throw new UsernameNotFoundException("Username doesn't exist.");
-        }
-        return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name())));
-    }
-
+*/
     @Override
     public User add(User user) throws ServiceException {
         try {
-            return userRepository.saveAndFlush(user);
+            if((userRepository.findByLogin(user.getLogin()) == null) && (user.getId() == 0)) {
+                user.setDate(new Date(System.currentTimeMillis()));
+                user.setStatus(Status.ACTIVE.name());
+                user.setRole(Role.CLIENT.name());
+                userRepository.saveAndFlush(user);
+//                contactRepository.saveAndFlush(Contact.builder()
+//                        .user(user)
+//                        .country("default")
+//                        .city("default")
+//                        .street("default")
+//                        .houseNumber("00")
+//                        .phoneNumber("000000000000")
+//                        .build());
+            }
+            return user;
+        }catch (Exception e){
+                throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public User update(User user) throws ServiceException {
+        try {
+            User dbUser = userRepository.findOne(user.getId());
+
+            if(dbUser != null){
+                dbUser.setName(user.getName());
+                dbUser.setSurname(user.getSurname());
+                dbUser.setLogin(user.getLogin());
+                dbUser.setPassword(user.getPassword());
+                dbUser.setSex(user.getSex());
+                dbUser.setOccupation(user.getOccupation());
+                log.info("before updates");
+                userRepository.updateUserName(dbUser.getId(), dbUser.getName());
+                userRepository.flush();
+                log.info("name");
+                userRepository.updateUserSurname(dbUser.getId(), dbUser.getSurname());
+                userRepository.flush();
+                log.info("surname");
+                userRepository.updateUserLogin(dbUser.getId(), dbUser.getLogin());
+                userRepository.flush();
+                log.info("login");
+                userRepository.updateUserPassword(dbUser.getId(), dbUser.getPassword());
+                userRepository.flush();
+                log.info("password");
+                userRepository.updateUserSex(dbUser.getId(), dbUser.getSex());
+                userRepository.flush();
+                log.info("Sex");
+                userRepository.updateUserOccupation(dbUser.getId(), dbUser.getOccupation());
+                userRepository.flush();
+                log.info("occupation");
+                dbUser = userRepository.findOne(dbUser.getId());
+//                // 6 rows to be changed
+//                log.info(dbUser);
+//                int ChangedRows = userRepository.updateUser(dbUser.getId(), dbUser.getName(), dbUser.getSurname(),
+//                        dbUser.getLogin(), dbUser.getPassword());
+
+            }
+            return dbUser;
         }catch (Exception e){
             throw new ServiceException(e);
         }
@@ -105,15 +187,6 @@ public class UserServiceImpl implements UserService {
     public User findById(long id) throws ServiceException {
         try {
             return userRepository.findOne(id);
-        }catch (Exception e){
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public User update(User user) throws ServiceException {
-        try {
-            return userRepository.saveAndFlush(user);
         }catch (Exception e){
             throw new ServiceException(e);
         }
