@@ -38,7 +38,7 @@
                         <div class="panel-body">
                             <form action="/market/user/profile" method="POST" th:object="${user}">
                                 <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
-                                <input id="id" class="form-control" type="hidden" required="" th:field="*{id}"/><br/>
+                                <!--<input id="id" class="form-control" type="hidden" required="" th:field="*{id}"/><br/>-->
                                 <div class="form-group">
                                     <label for="name">Name: </label>
                                     <p style="color:red;" th:if="${#fields.hasErrors('name')}"  th:errors="*{name}">Description errors</p>
@@ -102,7 +102,7 @@
                                 <!--<div class="form-group">-->
                                 <!--<label for="id">ID: </label>-->
                                 <!--<p style="color:red;" th:if="${#fields.hasErrors('id')}"  th:errors="*{id}">Description errors</p>-->
-                                <input id="id" class="form-control" type="hidden" required="" th:field="*{id}"/><br/>
+                                <!--<input id="id" class="form-control" type="hidden" required="" th:field="*{id}"/><br/>-->
                                 <!--</div>-->
                                 <div class="form-group">
                                     <label for="country">Country: </label>

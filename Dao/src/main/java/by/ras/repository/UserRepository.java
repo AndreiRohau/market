@@ -28,30 +28,30 @@ public interface UserRepository extends JpaRepository<User, Long> {
 //                   @Param("login") String login, @Param("password") String password,
 //                   @Param("sex") Sex sex, @Param("occupation") Occupation occupation);
 
-    @Modifying
-    @Query(value = "UPDATE users set name=?2 where id=?1", nativeQuery = true)
-    int updateUserName(Long id, String name);
-    @Modifying
-    @Query(value = "UPDATE users set surname=?2 where id=?1", nativeQuery = true)
-    int updateUserSurname(Long id, String surname);
-    @Modifying
-    @Query(value = "UPDATE users set login=?2 where id=?1", nativeQuery = true)
-    int updateUserLogin(Long id, String login);
-    @Modifying
-    @Query(value = "UPDATE users set password=?2 where id=?1", nativeQuery = true)
-    int updateUserPassword(Long id, String password);
-    @Modifying
-    @Query(value = "UPDATE users set sex=?2 where id=?1", nativeQuery = true)
-    int updateUserSex(Long id, String sex);
-    @Modifying
-    @Query(value = "UPDATE users set occupation=?2 where id=?1", nativeQuery = true)
-    int updateUserOccupation(Long id, String occupation);
-    @Modifying
-    @Query(value = "UPDATE users set role=?2 where id=?1", nativeQuery = true)
-    int updateUserRole(Long id, String role);
-    @Modifying
-    @Query(value = "UPDATE users set status=?2 where id=?1", nativeQuery = true)
-    int updateUserStatus(Long id, String status);
+//    @Modifying
+//    @Query(value = "UPDATE users set name=?2 where id=?1", nativeQuery = true)
+//    int updateUserName(Long id, String name);
+//    @Modifying
+//    @Query(value = "UPDATE users set surname=?2 where id=?1", nativeQuery = true)
+//    int updateUserSurname(Long id, String surname);
+//    @Modifying
+//    @Query(value = "UPDATE users set login=?2 where id=?1", nativeQuery = true)
+//    int updateUserLogin(Long id, String login);
+//    @Modifying
+//    @Query(value = "UPDATE users set password=?2 where id=?1", nativeQuery = true)
+//    int updateUserPassword(Long id, String password);
+//    @Modifying
+//    @Query(value = "UPDATE users set sex=?2 where id=?1", nativeQuery = true)
+//    int updateUserSex(Long id, String sex);
+//    @Modifying
+//    @Query(value = "UPDATE users set occupation=?2 where id=?1", nativeQuery = true)
+//    int updateUserOccupation(Long id, String occupation);
+//    @Modifying
+//    @Query(value = "UPDATE users set role=?2 where id=?1", nativeQuery = true)
+//    int updateUserRole(Long id, String role);
+//    @Modifying
+//    @Query(value = "UPDATE users set status=?2 where id=?1", nativeQuery = true)
+//    int updateUserStatus(Long id, String status);
 
 
 }

@@ -3,8 +3,8 @@ package by.ras.controllers;
 import by.ras.ContactService;
 import by.ras.UserService;
 import by.ras.WebException.WebException;
+import by.ras.controllers.utils.InternalMethods;
 import by.ras.entity.Occupation;
-import by.ras.entity.Role;
 import by.ras.entity.Sex;
 import by.ras.entity.particular.Contact;
 import by.ras.entity.particular.User;
@@ -12,7 +12,6 @@ import by.ras.exception.ServiceException;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Controller
 @RequestMapping("/market")
@@ -41,7 +38,7 @@ public class UserController{
     @ModelAttribute("home")
     public Model homeAddress(Model model){
         Object objUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String role = getActualRole(objUser);
+        String role = InternalMethods.getActualRole(objUser);
         model.addAttribute("role", role);
         model.addAttribute("home_address", homeAddress);
         return model;
@@ -64,17 +61,7 @@ public class UserController{
         return Sex.values();
     }
 
-
-    @GetMapping("/register")
-    public void registerUser(String name) throws WebException {
-        try {
-            userService.add(new User());
-        } catch (ServiceException e) {
-            throw new WebException(e);
-        }
-    }
-
-    //check registration
+    //registration
     @GetMapping("/registration")
     public String goToRegisterUser(){
         return "market/registration";
@@ -103,18 +90,18 @@ public class UserController{
         return "market/registration";
     }
 
+    //editing profile
     @GetMapping("/user/profile")
     public String goToProfile(@Valid @ModelAttribute("user") User user, @Valid @ModelAttribute("contact") Contact contact,
                               BindingResult bindingResult, Model model, HttpServletRequest request) throws WebException {
-//        long userId = getActualUserId(request);
-//        user.setId(userId);
-//        contact.setId(userId);
+        long userId = InternalMethods.getActualUserId(request);
+        user.setId(userId);
+        contact.setId(userId);
         try {
             String result = "";
             result = request.getParameter("result");
-            long user_id = (long) request.getSession().getAttribute("user_id");
-            log.info("user_id " + user_id);
-            user = userService.findById(user_id);
+            log.info("user_id " + userId);
+            user = userService.findById(userId);
             contact = user.getContact();
             if(user!=null){log.info("user " + user.toString());log.info("contact " + contact.toString());}
             model.addAttribute("user", user);
@@ -133,9 +120,9 @@ public class UserController{
     public String updateUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResultUser,
                              @Valid @ModelAttribute("contact") Contact contact, BindingResult bindingResultContact,
                              Model model, HttpServletRequest request) throws WebException {
-//        long userId = getActualUserId(request);
-//        user.setId(userId);
-//        contact.setId(userId);
+        long userId = InternalMethods.getActualUserId(request);
+        user.setId(userId);
+        contact.setId(userId);
         log.info("**************************");
         log.info("in POST updateUser");
         log.info(user.toString());
@@ -145,7 +132,7 @@ public class UserController{
             try {
                 if((contact.getCountry() == null) & (!bindingResultUser.hasErrors())){
                     log.info(user.toString());
-                    user = userService.update(user);
+                    user = userService.update(user); //null?
 
                     log.info(user.toString());
                     model.addAttribute("user", user);
@@ -164,14 +151,13 @@ public class UserController{
                 return "redirect:/market/user/profile?result=incorrect%20login";
             }
 
-        long user_id = (long) request.getSession().getAttribute("user_id");
-        log.info("user_id " + user_id);
+        log.info("user_id " + userId);
         try {
             if (contact.getCountry() == null) {
-                contact = userService.findById(user_id).getContact();
+                contact = userService.findById(userId).getContact();
                 model.addAttribute("contact", contact);
             } else if(user.getName() == null){
-                user = userService.findById(user_id);
+                user = userService.findById(userId);
                 model.addAttribute("user", user);
 
             }
@@ -183,118 +169,55 @@ public class UserController{
         model.addAttribute("login", user.getLogin());
         return "/market/user/profile";
     }
-//@PostMapping("/user/profile")
-//    public String updateUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResultUser,
-//                             @Valid @ModelAttribute("contact") Contact contact, BindingResult bindingResultContact,
-//                             Model model, HttpServletRequest request) throws WebException {
-//        log.info("**************************");
-//        log.info("in POST updateUser");
-//        log.info(user.toString());
-//        log.info(contact.toString());
-//        log.info("**************************");
-//        boolean success = false;
-//        if(!bindingResultUser.hasErrors() || !bindingResultContact.hasErrors()) {
-//            log.info("BindingResult bindingResult DOESNT FACE ERRORS");
-//            try {
-//                if(contact.getCountry() == null){
-//                    log.info(user.toString());
-//                    user = userService.update(user);
-//
-//                    log.info(user.toString());
-//                    model.addAttribute("user", user);
-//                }else if(user.getName() == null){
-//                    log.info(contact.toString());
-//                    contact = contactService.editContact(contact);
-//                    log.info(contact.toString());
-//                    model.addAttribute("contact", contact);
-//                }
-//            } catch (ServiceException e) {
-//                throw new WebException(e);
-//            }
-//            success = true;
-//            return "redirect:/market/user/profile";
-//        }
-//        long user_id = (long) request.getSession().getAttribute("user_id");
-//        log.info("user_id " + user_id);
+
+//    @GetMapping("/find/{id}")
+//    public User findUserById(@PathVariable Long id) throws WebException {
 //        try {
-//            if (contact.getCountry() == null) {
-//                contact = userService.findById(user_id).getContact();
-//                model.addAttribute("contact", contact);
-//
-//            } else if(user.getName() == null){
-//                user = userService.findById(user_id);
-//                model.addAttribute("user", user);
-//
-//            }
-//        }catch (ServiceException e){
+//            return userService.findById(id);
+//        } catch (ServiceException e) {
 //            throw new WebException(e);
 //        }
-//        model.addAttribute("success", success);
-//        return "/market/user/profile";
+//    }
+//
+//    @GetMapping("/find/{login}")
+//    public User findUserById(@PathVariable(value = "login") String login) throws WebException {
+//        try {
+//            return userService.findByLogin(login);
+//        } catch (ServiceException e) {
+//            throw new WebException(e);
+//        }
+//    }
+//
+//    @GetMapping("/find/all")
+//    public List<User> findAllUsers() throws WebException {
+//        try {
+//            return userService.findAll();
+//        } catch (ServiceException e) {
+//            throw new WebException(e);
+//        }
+//    }
+//
+//    @GetMapping("/update")
+//    public void updateUser(Long id, String name) throws WebException {
+//        try {
+//            userService.update(new User());//null?
+//        } catch (ServiceException e) {
+//            throw new WebException(e);
+//        }
+//    }
+//
+//    @GetMapping("/delete/{id}")
+//    public void deleteUser(@PathVariable Long id) throws WebException {
+//        try {
+//            userService.delete(id);
+//        } catch (ServiceException e) {
+//            throw new WebException(e);
+//        }
 //    }
 
-
-
-    @GetMapping("/find/{id}")
-    public User findUserById(@PathVariable Long id) throws WebException {
-        try {
-            return userService.findById(id);
-        } catch (ServiceException e) {
-            throw new WebException(e);
-        }
+    @GetMapping(value = "/user/usermain")
+    public String goToUsermain(Model model){
+        return "market/user/usermain";
     }
 
-    @GetMapping("/find/{login}")
-    public User findUserById(@PathVariable(value = "login") String login) throws WebException {
-        try {
-            return userService.findByLogin(login);
-        } catch (ServiceException e) {
-            throw new WebException(e);
-        }
-    }
-
-    @GetMapping("/find/all")
-    public List<User> findAllUsers() throws WebException {
-        try {
-            return userService.findAll();
-        } catch (ServiceException e) {
-            throw new WebException(e);
-        }
-    }
-
-    @GetMapping("/update")
-    public void updateUser(Long id, String name) throws WebException {
-        try {
-            userService.update(new User());
-        } catch (ServiceException e) {
-            throw new WebException(e);
-        }
-    }
-
-    @GetMapping("/delete/{id}")
-    public void deleteUser(@PathVariable Long id) throws WebException {
-        try {
-            userService.delete(id);
-        } catch (ServiceException e) {
-            throw new WebException(e);
-        }
-    }
-
-
-
-    //INTERNAL METHODS
-    private String getActualRole(Object objUser) {
-        String role = null;
-        if(objUser instanceof org.springframework.security.core.userdetails.User) {
-            org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) objUser;
-            role = Role.valueOf(String.valueOf(userDetails.getAuthorities().toArray()[0])).name();
-        }
-        return role;
-    }
-
-//    private long getActualUserId(HttpServletRequest request){
-//        long userId = 0;
-//        userId = (long) request.getSession().getAttribute("user_id");
-//        return userId;
-//    }
 }

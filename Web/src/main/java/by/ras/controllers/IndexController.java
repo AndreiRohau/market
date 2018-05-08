@@ -2,8 +2,8 @@ package by.ras.controllers;
 
 import by.ras.UserService;
 import by.ras.WebException.WebException;
+import by.ras.controllers.utils.InternalMethods;
 import by.ras.entity.Occupation;
-import by.ras.entity.Role;
 import by.ras.entity.particular.User;
 import by.ras.exception.ServiceException;
 import lombok.extern.log4j.Log4j;
@@ -15,11 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 
 @Controller
 @Log4j
@@ -47,7 +43,7 @@ public class IndexController {
     @ModelAttribute("home")
     public Model homeAddress(Model model){
         Object objUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String role = getActualRole(objUser);
+        String role = InternalMethods.getActualRole(objUser);
         model.addAttribute("role", role);
         model.addAttribute("home_address", homeAddress);
         return model;
@@ -68,9 +64,10 @@ public class IndexController {
         log.info("method=index : Actual role is " + role);
         if((role != null) && !(role.equals("null"))) {
             try {
-                long user_id = userService.findByLogin(login).getId();
-                request.getSession(true).setAttribute("user_id", user_id);
-                log.info("user_id=" + user_id + " in INDEX");
+                //putting userId into to session!!!!!!
+                long userId = userService.findByLogin(login).getId();
+                request.getSession(true).setAttribute("user_id", userId);
+                log.info("user_id=" + userId + " in INDEX");
                 if (role.matches("CLIENT")) {
                     return "redirect:/market/user/usermain";
                 } else if (role.matches("ADMIN")) {
@@ -91,37 +88,11 @@ public class IndexController {
         return model;
     }
 
-    @GetMapping(value = "/market/products/products")
-    public String goToProducts(Model model){
-        return "market/products/products";
-    }
-
-    @GetMapping(value = "/market/admin/adminmain")
-    public String goToAdminmain(Model model){
-        return "market/admin/adminmain";
-    }
-
-    @GetMapping(value = "/market/user/usermain")
-    public String goToUsermain(Model model){
-        return "market/user/usermain";
-    }
-
     @GetMapping(value = "/test")
     public String test(Model model){
         model.addAttribute("login", SecurityContextHolder.getContext().getAuthentication().getName());
         //throw new RuntimeException();
         return "test";
     }
-
-    private String getActualRole(Object objUser) {
-        String role = null;
-        if(objUser instanceof org.springframework.security.core.userdetails.User) {
-            org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) objUser;
-            role = Role.valueOf(String.valueOf(userDetails.getAuthorities().toArray()[0])).name();
-            log.info(" method=private String getActualRole() : Actual role is " + role);
-        }
-        return role;
-    }
-
 
 }
