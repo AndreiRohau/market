@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.contactRepository = contactRepository;
     }
-/*
+
     @PostConstruct
     public void init() throws Exception {
         Date date = new Date(System.currentTimeMillis());
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
                         .name("Admin")
                         .surname("Admin")
                         .login("admin")
-                        .password("a1Z")
+                        .password("q1Q")
                         .sex(Sex.MALE.name())
                         .occupation(Occupation.EMPLOYED.name())
                         .role(Role.ADMIN.name())
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
                         .name("User")
                         .surname("User")
                         .login("user")
-                        .password("a1Z")
+                        .password("q1Q")
                         .sex(Sex.MALE.name())
                         .occupation(Occupation.UNEMPLOYED.name())
                         .role(Role.CLIENT.name())
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
                 user = null;
             }
 
-            User user = userRepository.findOne(1L);
+            User user = userRepository.findByLogin("admin");
             Contact contact;
             if(user.getContact() == null) {
                 contact = Contact.builder()
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
                         .build();
                 contactRepository.saveAndFlush(contact);
             }
-            user = userRepository.findOne(2L);
+            user = userRepository.findByLogin("user");
             if(user.getContact() == null) {
                 contact = Contact.builder()
                         .user(user)
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException(e);
         }
     }
-*/
+
     @Override
     public User add(User user) throws ServiceException {
         try {

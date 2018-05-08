@@ -29,7 +29,7 @@ public class Product extends BaseEntity {
     private Integer price;
     @Column
     private String description;
-    @Column
-    private Integer quantity;
+//    @Column
+//    private Integer quantity;
 
 }

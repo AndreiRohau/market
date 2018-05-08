@@ -106,6 +106,9 @@ public class UserController{
     @GetMapping("/user/profile")
     public String goToProfile(@Valid @ModelAttribute("user") User user, @Valid @ModelAttribute("contact") Contact contact,
                               BindingResult bindingResult, Model model, HttpServletRequest request) throws WebException {
+//        long userId = getActualUserId(request);
+//        user.setId(userId);
+//        contact.setId(userId);
         try {
             String result = "";
             result = request.getParameter("result");
@@ -130,6 +133,9 @@ public class UserController{
     public String updateUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResultUser,
                              @Valid @ModelAttribute("contact") Contact contact, BindingResult bindingResultContact,
                              Model model, HttpServletRequest request) throws WebException {
+//        long userId = getActualUserId(request);
+//        user.setId(userId);
+//        contact.setId(userId);
         log.info("**************************");
         log.info("in POST updateUser");
         log.info(user.toString());
@@ -285,4 +291,10 @@ public class UserController{
         }
         return role;
     }
+
+//    private long getActualUserId(HttpServletRequest request){
+//        long userId = 0;
+//        userId = (long) request.getSession().getAttribute("user_id");
+//        return userId;
+//    }
 }
