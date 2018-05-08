@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
             }
             return user;
         }catch (Exception e){
-                throw new ServiceException(e);
+            throw new ServiceException(e);
         }
     }
 

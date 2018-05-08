@@ -26,9 +26,15 @@
             <li role="presentation"><a th:href="${home_address} + '/market/user/orders'">Orders</a></li>
         </ul>
         <hr/>
+        <div class="form-group" align="center">
+            <form title="clear all fields" action="/market/user/profile" method="GET">
+                <button type="submit" class="btn btn-default">Refresh fields</button>
+            </form>
+            <br/>
+            <p style="color:red;" th:text="${result}">info</p>
+        </div>
         <!--/*@thymesVar id="user" type="by.ras.entity.particular.User"*/-->
         <div class="container">
-            <p style="color:red;" th:text="${result}">info</p>
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
                     <div class="panel panel-default" style="margin-top:15px">
@@ -91,7 +97,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-md-offset-3">
-                    <div class="panel panel-default" style="margin-top:15px">
+                    <div class="panel panel-default" style="margin-top:0px">
                         <div class="panel-heading">
                             <h3 class="panel-title">Address</h3>
                         </div>
@@ -129,8 +135,6 @@
                                     <p style="color:red;" th:if="${#fields.hasErrors('phoneNumber')}"  th:errors="*{phoneNumber}">Description errors</p>
                                     <input id="phoneNumber" class="form-control" type="text" required="" th:field="*{phoneNumber}"/><br/>
                                 </div>
-                                <!--/*@thymesVar id="success" type="boolean"*/-->
-                                <p th:if="${success}">Success</p>
                                 <button type="submit" class="btn btn-default">Edit</button>
                             </form>
                         </div>

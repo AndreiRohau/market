@@ -21,13 +21,13 @@ import java.util.List;
 public class User extends BaseEntity {
 
     @Column
-    @Pattern(regexp="^[A-Z]+[a-z]+{3,10}$", message="Name must be alphanumeric with no spaces and first capital. 3-10 letters")
+    @Pattern(regexp="^[A-Z][a-z]{2,10}$", message="Name must be alpha with no spaces and first capital. 3-10 letters")
     private String name;
     @Column
-    @Pattern(regexp="^[A-Z]+[a-z]+{3,10}$", message="Surname must be alphanumeric with no spaces and first capital. 3-10 letters")
+    @Pattern(regexp="^[A-Z][a-z]{2,10}$", message="Surname must be alpha with no spaces and first capital. 3-10 letters")
     private String surname;
     @Column(unique = true)
-    @Pattern(regexp="^[a-z]+[a-z]+{3,10}$", message="Login must be alphanumeric with no spaces and first capital. 3-10 letters")
+    @Pattern(regexp="^[a-z][a-z]{2,10}$", message="Login must be alpha with no spaces and first capital. 3-10 letters")
     private String login;
     @Column
     // /* <!-- Minimum 3 characters, at least one letter and one number: --> */

@@ -12,6 +12,7 @@ import by.ras.exception.ServiceException;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,7 +64,10 @@ public class UserController{
 
     //registration
     @GetMapping("/registration")
-    public String goToRegisterUser(){
+    public String goToRegisterUser(Model model){
+        if(model.asMap().get("refresh") != null && model.asMap().get("refresh").equals("true")){
+            model.addAttribute("user", new User());
+        }
         return "market/registration";
     }
     @PostMapping("/registration")
