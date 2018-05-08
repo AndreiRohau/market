@@ -16,12 +16,14 @@
     <div class="well well-sm">
         <!--/*@thymesVar id="date" type="java.util.Date"*/-->
         <p th:text="${#dates.format(date, 'yyyy-MM-dd HH:mm:ss')}"> current daytime. ................... This is the INDEX page</p>
-        <h2 style="text-align:center;">Hello! Привет! 您好！</h2>
+        <h2 style="text-align:center;" th:text="'Hello! Привет! 您好！ Acting as : ' + ${login}">Hello! Привет! 您好！ Acting as : anonymousUser</h2>
     </div>
-    <div th:if="${login != null}" class="well">
-        <h3 style="text-align:center;" th:text="'Acting as : ' + ${login}">Acting as : anonymousUser</h3>
-    </div><br/>
-    <div class="container">
+    <div class="well">
+        <ul class="nav nav-tabs" >
+            <li role="presentation" class="active"><a th:href="${home_address} + '/'">Log in</a></li>
+            <li role="presentation"><a th:href="${home_address} + '/market/registration'">Registration</a></li>
+        </ul>
+        <div class="container">
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-default" style="margin-top:15px">
@@ -56,17 +58,16 @@
             </div>
         </div>
     </div>
-
+    </div>
     <div class="well well-sm">
         <h4 style="text-align:center;">Navigator</h4>
         <ol class="breadcrumb" style="text-align:center;">
-            <li><a th:href="${home_address} + '/'">index</a></li>
-            <li><a th:href="${home_address} + '/market/registration'">registration</a></li>
-            <li><a th:href="${home_address} + '/test'">test</a></li>
-            <li><a th:href="${home_address} + '/market/products/products'">products</a></li>
-            <li><a th:href="${home_address} + '/market/user/usermain'">usermain</a></li>
-            <li><a th:href="${home_address} + '/market/admin/adminmain'">adminmain</a></li>
-            <li class="active">index</li>
+            <li class="active">Home</li>
+            <li><a th:href="${home_address} + '/market/registration'">Registration</a></li>
+            <li><a th:href="${home_address} + '/test'">Test anonymous</a></li>
+            <li><a th:href="${home_address} + '/market/products/products'">Products</a></li>
+            <li><a th:href="${home_address} + '/market/user/usermain'">Usermain</a></li>
+            <li><a th:href="${home_address} + '/market/admin/adminmain'">Adminmain</a></li>
         </ol>
     </div>
 </body>

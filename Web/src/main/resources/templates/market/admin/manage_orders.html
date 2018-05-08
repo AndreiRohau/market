@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Anonymous</title>
+    <title>Manage orders</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -14,7 +14,7 @@
 </head>
 <body>
 <div class="well well-sm">
-    <h2 style="text-align:center;">Anonymous</h2>
+    <h2 style="text-align:center;">Manage orders</h2>
 </div>
 
 <!-- HEADER END -->
@@ -22,10 +22,13 @@
 <div class="well">
     <ul class="nav nav-tabs">
         <li role="presentation"><a th:href="${home_address} + '/'">Main</a></li>
-        <li role="presentation" class="active"><a th:href="${home_address} + '/market/products/products'">Products</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/products/products'">Products</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/admin/add_product'">Add product</a></li>
+        <li role="presentation" class="active"><a th:href="${home_address} + '/market/admin/manage_orders'">Manage orders</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/admin/manage_clients'">Manage clients</a></li>
     </ul>
     <hr/>
-    <p>Hi Anonymous!</p>
+    <p>My advertising</p>
     <br/>
 
 
@@ -112,8 +115,8 @@
 <div class="well well-sm">
     <h4 style="text-align:center;">Navigator</h4>
     <ol class="breadcrumb" style="text-align:center;">
-        <li><a th:href="${home_address} + '/'">main</a></li>
-        <li class="active">products</li>
+        <li><a th:href="${home_address} + '/'">Main</a></li>
+        <li class="active">Manage orders</li>
         <!--<li><a th:href="${home_address} + '/market/registration'">registration</a></li>-->
         <!--<li><a th:href="${home_address} + '/test'">test</a></li>-->
         <!--<li><a th:href="${home_address} + '/market/products/products'">products</a></li>-->

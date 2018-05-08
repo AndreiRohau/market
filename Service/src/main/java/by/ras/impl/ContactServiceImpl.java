@@ -99,26 +99,24 @@ public class ContactServiceImpl implements ContactService {
                 dbContact.setStreet(contact.getStreet());
                 dbContact.setHouseNumber(contact.getHouseNumber());
                 dbContact.setPhoneNumber(contact.getPhoneNumber());
-                log.info("before updates");
-                contactRepository.updateCountry(dbContact.getId(), dbContact.getCountry());
-                contactRepository.flush();
-                log.info("surname");
-                contactRepository.updateCity(dbContact.getId(), dbContact.getCity());
-                contactRepository.flush();
-                log.info("login");
-                contactRepository.updateStreet(dbContact.getId(), dbContact.getStreet());
-                contactRepository.flush();
-                log.info("password");
-                contactRepository.updateHouseNumber(dbContact.getId(), dbContact.getHouseNumber());
-                contactRepository.flush();
-                log.info("Sex");
-                contactRepository.updatePhoneNumber(dbContact.getId(), dbContact.getPhoneNumber());
-                contactRepository.flush();
-                log.info("occupation");
-//                // 6 rows to be changed
-//                log.info(dbUser);
-//                int ChangedRows = userRepository.updateUser(dbUser.getId(), dbUser.getName(), dbUser.getSurname(),
-//                        dbUser.getLogin(), dbUser.getPassword());
+                contactRepository.saveAndFlush(dbContact);
+
+//                log.info("before updates");
+//                contactRepository.updateCountry(dbContact.getId(), dbContact.getCountry());
+//                contactRepository.flush();
+//                log.info("surname");
+//                contactRepository.updateCity(dbContact.getId(), dbContact.getCity());
+//                contactRepository.flush();
+//                log.info("login");
+//                contactRepository.updateStreet(dbContact.getId(), dbContact.getStreet());
+//                contactRepository.flush();
+//                log.info("password");
+//                contactRepository.updateHouseNumber(dbContact.getId(), dbContact.getHouseNumber());
+//                contactRepository.flush();
+//                log.info("Sex");
+//                contactRepository.updatePhoneNumber(dbContact.getId(), dbContact.getPhoneNumber());
+//                contactRepository.flush();
+//                log.info("occupation");
 
             }
             return contact;

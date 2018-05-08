@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.contactRepository = contactRepository;
     }
-/*
+
     @PostConstruct
     public void init() throws Exception {
         Date date = new Date(System.currentTimeMillis());
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
                         .name("Admin")
                         .surname("Admin")
                         .login("admin")
-                        .password("a1Z")
+                        .password("q1Q")
                         .sex(Sex.MALE.name())
                         .occupation(Occupation.EMPLOYED.name())
                         .role(Role.ADMIN.name())
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
                         .name("User")
                         .surname("User")
                         .login("user")
-                        .password("a1Z")
+                        .password("q1Q")
                         .sex(Sex.MALE.name())
                         .occupation(Occupation.UNEMPLOYED.name())
                         .role(Role.CLIENT.name())
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
                 user = null;
             }
 
-            User user = userRepository.findOne(1L);
+            User user = userRepository.findByLogin("admin");
             Contact contact;
             if(user.getContact() == null) {
                 contact = Contact.builder()
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
                         .build();
                 contactRepository.saveAndFlush(contact);
             }
-            user = userRepository.findOne(2L);
+            user = userRepository.findByLogin("user");
             if(user.getContact() == null) {
                 contact = Contact.builder()
                         .user(user)
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException(e);
         }
     }
-*/
+
     @Override
     public User add(User user) throws ServiceException {
         try {
@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
             }
             return user;
         }catch (Exception e){
-                throw new ServiceException(e);
+            throw new ServiceException(e);
         }
     }
 
@@ -133,31 +133,29 @@ public class UserServiceImpl implements UserService {
                 dbUser.setPassword(user.getPassword());
                 dbUser.setSex(user.getSex());
                 dbUser.setOccupation(user.getOccupation());
-                log.info("before updates");
-                userRepository.updateUserName(dbUser.getId(), dbUser.getName());
-                userRepository.flush();
-                log.info("name");
-                userRepository.updateUserSurname(dbUser.getId(), dbUser.getSurname());
-                userRepository.flush();
-                log.info("surname");
-                userRepository.updateUserLogin(dbUser.getId(), dbUser.getLogin());
-                userRepository.flush();
-                log.info("login");
-                userRepository.updateUserPassword(dbUser.getId(), dbUser.getPassword());
-                userRepository.flush();
-                log.info("password");
-                userRepository.updateUserSex(dbUser.getId(), dbUser.getSex());
-                userRepository.flush();
-                log.info("Sex");
-                userRepository.updateUserOccupation(dbUser.getId(), dbUser.getOccupation());
-                userRepository.flush();
-                log.info("occupation");
-                dbUser = userRepository.findOne(dbUser.getId());
-//                // 6 rows to be changed
-//                log.info(dbUser);
-//                int ChangedRows = userRepository.updateUser(dbUser.getId(), dbUser.getName(), dbUser.getSurname(),
-//                        dbUser.getLogin(), dbUser.getPassword());
 
+                userRepository.saveAndFlush(dbUser);
+
+//                log.info("before updates");
+//                userRepository.updateUserName(dbUser.getId(), dbUser.getName());
+//                userRepository.flush();
+//                log.info("name");
+//                userRepository.updateUserSurname(dbUser.getId(), dbUser.getSurname());
+//                userRepository.flush();
+//                log.info("surname");
+//                userRepository.updateUserLogin(dbUser.getId(), dbUser.getLogin());
+//                userRepository.flush();
+//                log.info("login");
+//                userRepository.updateUserPassword(dbUser.getId(), dbUser.getPassword());
+//                userRepository.flush();
+//                log.info("password");
+//                userRepository.updateUserSex(dbUser.getId(), dbUser.getSex());
+//                userRepository.flush();
+//                log.info("Sex");
+//                userRepository.updateUserOccupation(dbUser.getId(), dbUser.getOccupation());
+//                userRepository.flush();
+//                log.info("occupation");
+//                dbUser = userRepository.findOne(dbUser.getId());
             }
             return dbUser;
         }catch (Exception e){
