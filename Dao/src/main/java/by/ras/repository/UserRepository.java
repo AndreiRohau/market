@@ -16,6 +16,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByLogin(@Param("login") String login);
 
 
+
+
 //    @Modifying
 //    @Query(value = "UPDATE users SET name=?2, surname=?3, login=?4, password=?5, sex=?6, occupation=?7 where id = ?1", nativeQuery = true)
 //    int updateUser(Long id, String name, String surname, String login, String password, String sex, String occupation);

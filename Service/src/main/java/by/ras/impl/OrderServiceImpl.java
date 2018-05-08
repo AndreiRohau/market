@@ -2,14 +2,20 @@ package by.ras.impl;
 
 import by.ras.OrderService;
 import by.ras.entity.particular.Order;
+import by.ras.entity.particular.User;
 import by.ras.exception.ServiceException;
 import by.ras.repository.OrderRepository;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
+@Log4j
 public class OrderServiceImpl implements OrderService {
 
     private final
@@ -61,6 +67,22 @@ public class OrderServiceImpl implements OrderService {
         try {
             orderRepository.delete(id);
         }catch (Exception e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<Order> findByUserId(User user, PageRequest pageRequest) throws ServiceException {
+        return null;
+    }
+
+    @Override
+    public long countRows() throws ServiceException {
+        try{
+            long maxRows = orderRepository.count();
+            return maxRows;
+        }catch (Exception e){
+            log.info("Errors while executing : orderRepository.countRows()");
             throw new ServiceException(e);
         }
     }

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Manage orders</title>
+    <title>Client orders</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -14,7 +14,7 @@
 </head>
 <body>
 <div class="well well-sm">
-    <h2 style="text-align:center;">Manage orders</h2>
+    <h2 style="text-align:center;">Clients orders</h2>
 </div>
 
 <!-- HEADER END -->
@@ -24,15 +24,20 @@
         <li role="presentation"><a th:href="${home_address} + '/'">Main</a></li>
         <li role="presentation"><a th:href="${home_address} + '/market/products/products'">Products</a></li>
         <li role="presentation"><a th:href="${home_address} + '/market/admin/add_product'">Add product</a></li>
-        <li role="presentation" class="active"><a th:href="${home_address} + '/market/admin/manage_orders'">Manage orders</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/admin/manage_orders'">Manage orders</a></li>
         <li role="presentation"><a th:href="${home_address} + '/market/admin/manage_clients/1'">Manage clients</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/admin/edit_client/' + ${user_id}">Edit client</a></li>
+        <li role="presentation" class="active"><a th:href="${home_address} + '/market/admin/client_orders/' + ${user_id} + '/1'">Client orders</a></li>
     </ul>
     <br/>
 
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h4>All clients are here</h4>
+                <h4>All client orders are here :</h4>
+                <form th:action="'/market/admin/edit_client/' + ${user_id}" method="POST">
+
+                </form>
                 <div class="table-responsive">
                     <table id="mytable" class="table table-bordred table-striped" border="1px solid black;">
                         <thead>
@@ -47,8 +52,8 @@
                             <th>Sex</th><!--sex-->
                             <th>Status</th><!--account_status-->
                             <th>Occupation</th><!--occupation-->
-                            <th>Edit</th><!-- Inspect for Editing -->
                             <th>Orders</th><!--List<Order>-->
+                            <th>Edit</th><!-- Inspect for Editing -->
                         </tr>
                         </thead>
 
@@ -67,19 +72,14 @@
                                 <td th:text="${client.surname}">Surname</td><!--surname-->
                                 <td th:text="${client.role}">Role</td><!--role-->
                                 <td th:text="${client.sex}">Sex</td><!--sex-->
-                                <td><form action="/market/admin/manage_clients/change_status" method="POST">
-                                    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/><p data-placement="top" data-toggle="tooltip" th:title="${client.status}">
-                                    <button th:if="${client.status} != BLOCKED" th:value="${client.id}" name="user_id" class="btn btn-success btn-xs" data-title="Reset" data-toggle="modal" data-target="#Change status" >
-                                        <span class="glyphicon glyphicon-ok"></span></button>
-                                    <button th:if="${client.status} == BLOCKED" th:value="${client.id}" name="user_id" class="btn btn-danger btn-xs" data-title="Reset" data-toggle="modal" data-target="#Change status" >
-                                        <span class="glyphicon glyphicon-remove"></span></button></p></form></td>
+                                <td th:text="${client.status}">Status</td><!--account_status-->
                                 <td th:text="${client.occupation}">Occupation</td><!--occupation-->
-                                <td><form th:action="'/market/admin/edit_client/' + ${client.id}" method="GET"><p data-placement="top" data-toggle="tooltip" title="Edit">
-                                    <button th:value="${client.id}" class="btn btn-warning btn-xs" data-title="Edit" data-toggle="modal" data-target="#Edit" >
-                                        <span class="glyphicon glyphicon-zoom-in"></span></button></p></form></td>
-                                <td><form th:action="'/market/admin/client_orders/' + ${client.id} + '/1'" method="GET"><p data-placement="top" data-toggle="tooltip" title="Orders">
+                                <td><form th:action="'/market/admin/client_orders/' + ${client.id} + '/1'" method="POST"><p data-placement="top" data-toggle="tooltip" title="Orders">
                                     <button th:value="${client.id}" class="btn btn-success btn-xs" data-title="Orders" data-toggle="modal" data-target="#Orders" >
                                         <span class="glyphicon glyphicon-folder-close"></span></button></p></form></td>
+                                <td><form th:action="'/market/admin/edit_client/' + ${client.id}" method="POST"><p data-placement="top" data-toggle="tooltip" title="Edit">
+                                    <button th:value="${client.id}" class="btn btn-warning btn-xs" data-title="Edit" data-toggle="modal" data-target="#Edit" >
+                                        <span class="glyphicon glyphicon-zoom-in"></span></button></p></form></td>
                             </tr>
                         </div>
                         </tbody>
@@ -87,25 +87,33 @@
 
                     <div class="clearfix" style="text-align:center;"></div>
                     <ul class="pagination pull-right" th:each="page : ${pages}">
-                        <li class="active" th:if="${current_page} == ${page}" >
+                        <!--<li class="disabled"><a href="#"><span class="glyphicon glyphicon-chevron-left"></span></a></li>-->
+                        <!--<li class="active"><a href="#">1</a></li>-->
+                        <li class="active" th:if="${current_pape} == ${page}" >
                             <a th:text="${current_page}" th:href="${home_address}+ '/market/admin/manage_clients/' + ${current_page}">current page</a>
                         </li>
-                        <li th:if="${current_page} != ${page}">
+                        <li th:if="${current_pape} != ${page}">
                             <a th:text="${page}" th:href="${home_address}+ '/market/admin/manage_clients/' + ${page}">page</a>
                         </li>
+                        <!--<li><a href="#">5</a></li>-->
+                        <!--<li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span></a></li>-->
                     </ul>
+
+
+
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <!-- NAVIGATOR -->
 <div class="well well-sm">
     <h4 style="text-align:center;">Navigator</h4>
     <ol class="breadcrumb" style="text-align:center;">
         <li><a th:href="${home_address} + '/'">Main</a></li>
-        <li class="active">Manage clients</li>
+        <li><a th:href="${home_address} + '/market/admin/manage_clients/1'">Manage clients</a></li>
+        <li><a th:href="${home_address} + '/market/admin/edit_client/' + ${user_id}">Edit client</a></li>
+        <li class="active">Client orders</li>
     </ol>
 </div>
 </body>

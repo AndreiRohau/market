@@ -12,6 +12,7 @@ import by.ras.repository.UserRepository;
 import by.ras.UserService;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -135,7 +136,8 @@ public class UserServiceImpl implements UserService {
                 dbUser.setOccupation(user.getOccupation());
 
                 userRepository.saveAndFlush(dbUser);
-
+            }
+            return dbUser;
 //                log.info("before updates");
 //                userRepository.updateUserName(dbUser.getId(), dbUser.getName());
 //                userRepository.flush();
@@ -156,8 +158,6 @@ public class UserServiceImpl implements UserService {
 //                userRepository.flush();
 //                log.info("occupation");
 //                dbUser = userRepository.findOne(dbUser.getId());
-            }
-            return dbUser;
         }catch (Exception e){
             throw new ServiceException(e);
         }
@@ -195,6 +195,65 @@ public class UserServiceImpl implements UserService {
         try {
             return userRepository.findAll();
         }catch (Exception e){
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<User> findAll(PageRequest pageRequest) throws ServiceException {
+        try {
+            return userRepository.findAll(pageRequest).getContent();
+        }catch (Exception e){
+            log.info("Errors while executing : userRepository.findAll(pageRequest).getContent()");
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public User resetPassword(User user) throws ServiceException {
+        try {
+            User dbUser = userRepository.findOne(user.getId());
+
+            if(dbUser != null){
+                dbUser.setPassword(user.getPassword());
+                userRepository.saveAndFlush(dbUser);
+            }
+            return dbUser;
+        }catch (Exception e){
+            log.info("Errors while executing : userRepository.findAll(pageRequest).getContent()");
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public User changeStatus(User user) throws ServiceException {
+        try {
+            User dbUser = userRepository.findOne(user.getId());
+
+            if(dbUser != null){
+                log.info(dbUser.getStatus());
+                if(dbUser.getStatus().equals(Status.BLOCKED.name())){
+                    dbUser.setStatus(Status.ACTIVE.name());
+                }else if (dbUser.getStatus().equals(Status.ACTIVE.name())){
+                    dbUser.setStatus(Status.BLOCKED.name());
+                }
+                dbUser = userRepository.saveAndFlush(dbUser);
+            }
+            log.info(dbUser.getStatus());
+            return dbUser;
+        }catch (Exception e){
+            log.info("Errors while executing : userRepository.findAll(pageRequest).getContent()");
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public long countRows() throws ServiceException {
+        try{
+            long maxRows = userRepository.count();
+            return maxRows;
+        }catch (Exception e){
+            log.info("Errors while executing : userRepository.countRows()");
             throw new ServiceException(e);
         }
     }
