@@ -17,9 +17,11 @@ public interface UserService {
 
     User update(User user) throws ServiceException;
 
-    void delete(long id) throws ServiceException;
+    User updateByAdmin(User user) throws ServiceException;
 
+    void delete(long id) throws ServiceException;
     User resetPassword(User user) throws ServiceException;
+
     User changeStatus(User user) throws ServiceException;
 
     long countRows() throws ServiceException;

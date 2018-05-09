@@ -35,51 +35,40 @@
         <div class="row">
             <div class="col-md-12">
                 <h4>All client orders are here :</h4>
-                <form th:action="'/market/admin/edit_client/' + ${user_id}" method="POST">
-
+                <form th:action="'/market/admin/edit_client/' + ${user_id}" method="GET">
+                    <button type="submit" name="user_id" th:value="${user_id}" title="Edit client">Back to client </button>
                 </form>
                 <div class="table-responsive">
                     <table id="mytable" class="table table-bordred table-striped" border="1px solid black;">
                         <thead>
                         <tr>
                             <th>Date creation</th><!--creation_date-->
-                            <th>Id</th><!--user_id-->
-                            <th>Login</th><!--login-->
-                            <th>Password</th><!--password-->
-                            <th>Name</th><!--name-->
-                            <th>Surname</th><!--surname-->
-                            <th>Role</th><!--role-->
-                            <th>Sex</th><!--sex-->
-                            <th>Status</th><!--account_status-->
-                            <th>Occupation</th><!--occupation-->
-                            <th>Orders</th><!--List<Order>-->
-                            <th>Edit</th><!-- Inspect for Editing -->
+                            <th>Order Id</th><!--order_id-->
+                            <th>Order Status</th><!--OrderStatus-->
+                            <th>Total price</th><!--totalSum-->
+                            <th>Ordered products</th><!-- inspect order with order products -->
+
                         </tr>
                         </thead>
 
                         <tbody>
                         <!--Output PART-->
-                        <div th:each="client : ${clients}">
+                        <div th:each="client : ${orders}">
                             <tr>
-                                <td th:text="*{client.date}">Date creation</td><!--creation_date-->
-                                <td th:text="${client.id}">Id</td><!--user_id-->
-                                <td th:text="${client.login}">Login</td><!--login-->
-                                <td><form action="/market/admin/manage_clients/reset" method="POST">
-                                    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/><p data-placement="top" data-toggle="tooltip" title="Reset [q1Q]">
-                                    <button th:value="${client.id}" name="user_id" class="btn btn-danger btn-xs" data-title="Reset" data-toggle="modal" data-target="#Reset" >
-                                        <span class="glyphicon glyphicon-refresh"></span></button></p></form></td>
-                                <td th:text="${client.name}">Name</td><!--name-->
-                                <td th:text="${client.surname}">Surname</td><!--surname-->
-                                <td th:text="${client.role}">Role</td><!--role-->
-                                <td th:text="${client.sex}">Sex</td><!--sex-->
-                                <td th:text="${client.status}">Status</td><!--account_status-->
-                                <td th:text="${client.occupation}">Occupation</td><!--occupation-->
-                                <td><form th:action="'/market/admin/client_orders/' + ${client.id} + '/1'" method="POST"><p data-placement="top" data-toggle="tooltip" title="Orders">
-                                    <button th:value="${client.id}" class="btn btn-success btn-xs" data-title="Orders" data-toggle="modal" data-target="#Orders" >
-                                        <span class="glyphicon glyphicon-folder-close"></span></button></p></form></td>
-                                <td><form th:action="'/market/admin/edit_client/' + ${client.id}" method="POST"><p data-placement="top" data-toggle="tooltip" title="Edit">
-                                    <button th:value="${client.id}" class="btn btn-warning btn-xs" data-title="Edit" data-toggle="modal" data-target="#Edit" >
-                                        <span class="glyphicon glyphicon-zoom-in"></span></button></p></form></td>
+                                <td th:text="*{orders.date}">Date creation</td><!--creation_date-->
+                                <td th:text="${orders.id}">Id</td><!--order_id-->
+                                <td><form action="/market/admin/manage_order/change_status" method="POST">
+                                    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/><p data-placement="top" data-toggle="tooltip" th:title="${client.status}">
+                                    <button th:if="${client.status} == NEW" th:value="${client.id}" name="user_id" class="btn btn-success btn-xs" data-title="CLOSED" data-toggle="modal" data-target="#Change status" >
+                                        <span class="glyphicon glyphicon-ok"></span></button>
+                                    <button th:if="${client.status} == ACTIVE" th:value="${client.id}" name="user_id" class="btn btn-warning btn-xs" data-title="Active" data-toggle="modal" data-target="#Change status" >
+                                        <span class="glyphicon glyphicon-send"></span></button>
+                                    <button th:if="${client.status} == CLOSED" th:value="${client.id}" name="user_id" class="btn btn-danger btn-xs" data-title="NEW" data-toggle="modal" data-target="#Change status" >
+                                        <span class="glyphicon glyphicon-remove"></span></button></p></form></td>
+                                <td th:text="${orders.price}">Price</td><!--price-->
+                                <td><form th:action="'/market/admin/order/' + ${orders.id}" method="GET"><p data-placement="top" data-toggle="tooltip" title="Description">
+                                    <button th:value="${orders.id}" class="btn btn-primary btn-xs" data-title="Orders" data-toggle="modal" data-target="#Description" >
+                                    <span class="glyphicon glyphicon-folder-close"></span></button></p></form></td>
                             </tr>
                         </div>
                         </tbody>
@@ -87,20 +76,13 @@
 
                     <div class="clearfix" style="text-align:center;"></div>
                     <ul class="pagination pull-right" th:each="page : ${pages}">
-                        <!--<li class="disabled"><a href="#"><span class="glyphicon glyphicon-chevron-left"></span></a></li>-->
-                        <!--<li class="active"><a href="#">1</a></li>-->
                         <li class="active" th:if="${current_pape} == ${page}" >
                             <a th:text="${current_page}" th:href="${home_address}+ '/market/admin/manage_clients/' + ${current_page}">current page</a>
                         </li>
                         <li th:if="${current_pape} != ${page}">
                             <a th:text="${page}" th:href="${home_address}+ '/market/admin/manage_clients/' + ${page}">page</a>
                         </li>
-                        <!--<li><a href="#">5</a></li>-->
-                        <!--<li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span></a></li>-->
                     </ul>
-
-
-
                 </div>
             </div>
         </div>

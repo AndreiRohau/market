@@ -7,7 +7,10 @@ import by.ras.ProductService;
 import by.ras.UserService;
 import by.ras.WebException.WebException;
 import by.ras.controllers.utils.InternalMethods;
+import by.ras.entity.Occupation;
 import by.ras.entity.ProductType;
+import by.ras.entity.Sex;
+import by.ras.entity.particular.Contact;
 import by.ras.entity.particular.Order;
 import by.ras.entity.particular.Product;
 import by.ras.entity.particular.User;
@@ -55,12 +58,20 @@ public class AdminController {
         return model;
     }
 
+    @ModelAttribute("occupations")
+    public Occupation[] occupationTypes(){
+        return Occupation.values();
+    }
+    @ModelAttribute("sexs")
+    public Sex[] sexTypes(){
+        return Sex.values();
+    }
     @ModelAttribute("product")
     public Product productModel(){
         return new Product();
     }
     @ModelAttribute("productTypes")
-    public ProductType[] sexTypes(){
+    public ProductType[] productTypesTypes(){
         return ProductType.values();
     }
 
@@ -158,20 +169,6 @@ public class AdminController {
 
 
 
-
-    @GetMapping(value = "/admin/edit_client/{userId}")
-    public String goToEditClient(Model model, @PathVariable("userId") long userId, HttpServletRequest request) throws WebException {
-        try{
-            User user = userService.findById(userId);
-
-            model.addAttribute("client", user);
-            model.addAttribute("user_id", userId);
-            return "market/admin/edit_client";
-        }catch (ServiceException e) {
-            throw new WebException(e);
-        }
-    }
-
     @GetMapping(value = "/admin/client_orders/{userId}/{currentPage}")
     public String goToClientOrders(Model model, @PathVariable("currentPage") int currentPage,
                                    @PathVariable("userId") long userId, HttpServletRequest request) throws WebException {
@@ -205,6 +202,105 @@ public class AdminController {
     @GetMapping(value = "/admin/manage_orders")
     public String goToAdminmainManageOrders(Model model){
         return "market/admin/manage_orders";
+    }
+
+
+
+
+//to delete
+//    @GetMapping(value = "/admin/edit_client/{userId}")
+//    public String goToEditClient(Model model, @PathVariable("userId") long userId, HttpServletRequest request) throws WebException {
+//        try{
+//            User user = userService.findById(userId);
+//
+//            model.addAttribute("client", user);
+//            model.addAttribute("user_id", userId);
+//            return "market/admin/edit_client";
+//        }catch (ServiceException e) {
+//            throw new WebException(e);
+//        }
+//    }
+
+    //editing profile
+    @GetMapping("/admin/edit_client/{userId}")
+    public String goToEditClient(@PathVariable("userId") long userId, @Valid @ModelAttribute("user") User user,
+                                 @Valid @ModelAttribute("contact") Contact contact, BindingResult bindingResult,
+                                 Model model, HttpServletRequest request) throws WebException {
+
+        user.setId(userId);
+        contact.setId(userId);
+        try {
+            String result = "";
+            result = request.getParameter("result");
+            log.info("user_id " + userId);
+            user = userService.findById(userId);
+            contact = user.getContact();
+            if(user!=null){log.info("user " + user.toString());log.info("contact " + contact.toString());}
+            model.addAttribute("user", user);
+            model.addAttribute("contact", contact);
+            model.addAttribute("login", user.getLogin());
+            model.addAttribute("result", result);
+            model.addAttribute("user_id", userId);
+
+        } catch (ServiceException e) {
+            throw new WebException(e);
+        }
+        return "market/admin/edit_client";
+    }
+
+
+    @PostMapping("/admin/edit_client/{userId}")
+    public String editClient(@PathVariable("userId") int userId, @Valid @ModelAttribute("user") User user,
+                             BindingResult bindingResultUser, @Valid @ModelAttribute("contact") Contact contact,
+                             BindingResult bindingResultContact, Model model, HttpServletRequest request) throws WebException {
+
+        user.setId(userId);
+        contact.setId(userId);
+        log.info("**************************");
+        log.info("in POST updateUser");
+        log.info(user.toString());
+        log.info(contact.toString());
+        log.info("**************************");
+        String result = "";
+        try {
+            if((contact.getCountry() == null) & (!bindingResultUser.hasErrors())){
+                log.info(user.toString());
+                user = userService.updateByAdmin(user); //null?
+
+                log.info(user.toString());
+                model.addAttribute("user", user);
+                log.info("BindingResult bindingResult DOESNT FACE ERRORS - 1");
+                return "redirect:/market/admin/edit_client/"+userId+"?result=success";
+
+            }else if((user.getName() == null) & (!bindingResultContact.hasErrors())){
+                log.info(contact.toString());
+                contact = contactService.editContact(contact);
+                log.info(contact.toString());
+                model.addAttribute("contact", contact);
+                log.info("BindingResult bindingResult DOESNT FACE ERRORS - 2 upd contact");
+                return "redirect:/market/admin/edit_client/"+userId+"?result=success";
+            }
+        } catch (Exception e) {
+            return "redirect:/market/admin/edit_client/"+userId+"?result=incorrect%20login";
+        }
+
+        log.info("user_id " + userId);
+        try {
+            if (contact.getCountry() == null) {
+                contact = userService.findById(userId).getContact();
+                model.addAttribute("contact", contact);
+            } else if(user.getName() == null){
+                user = userService.findById(userId);
+                model.addAttribute("user", user);
+
+            }
+        }catch (ServiceException e){
+            throw new WebException(e);
+        }
+        result = "Incorrect input data.";
+        model.addAttribute("result", result);
+        model.addAttribute("login", user.getLogin());
+        return "/market/admin/edit_client";
     }
 
 }

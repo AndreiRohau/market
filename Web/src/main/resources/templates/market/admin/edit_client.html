@@ -30,74 +30,107 @@
         <li role="presentation"><a th:href="${home_address} + '/market/admin/client_orders/' + ${user_id} + '/1'">Client orders</a></li>
     </ul>
     <br/>
-
+    <div class="form-group" align="center">
+        <form title="clear all fields" th:action="'/market/admin/edit_client/' + ${userId}" method="GET">
+            <button type="submit" class="btn btn-default">Refresh fields</button>
+        </form>
+        <br/>
+        <p style="color:red;" th:text="${result}">info</p>
+    </div>
+    <!--/*@thymesVar id="user" type="by.ras.entity.particular.User"*/-->
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
-                <h4>All client orders are here :</h4>
-                <div class="table-responsive">
-                    <table id="mytable" class="table table-bordred table-striped" border="1px solid black;">
-                        <thead>
-                        <tr>
-                            <th>Date creation</th><!--creation_date-->
-                            <th>Id</th><!--user_id-->
-                            <th>Login</th><!--login-->
-                            <th>Password</th><!--password-->
-                            <th>Name</th><!--name-->
-                            <th>Surname</th><!--surname-->
-                            <th>Role</th><!--role-->
-                            <th>Sex</th><!--sex-->
-                            <th>Status</th><!--account_status-->
-                            <th>Occupation</th><!--occupation-->
-                            <th>Orders</th><!--List<Order>-->
-                            <th>Edit</th><!-- Inspect for Editing -->
-                        </tr>
-                        </thead>
-
-                        <tbody>
-                        <!--Output PART-->
-                        <div th:each="client : ${clients}">
-                            <tr>
-                                <td th:text="*{client.date}">Date creation</td><!--creation_date-->
-                                <td th:text="${client.id}">Id</td><!--user_id-->
-                                <td th:text="${client.login}">Login</td><!--login-->
-                                <td><form action="/market/admin/manage_clients/reset" method="POST">
-                                    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/><p data-placement="top" data-toggle="tooltip" title="Reset [q1Q]">
-                                    <button th:value="${client.id}" name="user_id" class="btn btn-danger btn-xs" data-title="Reset" data-toggle="modal" data-target="#Reset" >
-                                        <span class="glyphicon glyphicon-refresh"></span></button></p></form></td>
-                                <td th:text="${client.name}">Name</td><!--name-->
-                                <td th:text="${client.surname}">Surname</td><!--surname-->
-                                <td th:text="${client.role}">Role</td><!--role-->
-                                <td th:text="${client.sex}">Sex</td><!--sex-->
-                                <td th:text="${client.status}">Status</td><!--account_status-->
-                                <td th:text="${client.occupation}">Occupation</td><!--occupation-->
-                                <td><form th:action="'/market/admin/client_orders/' + ${client.id} + '/1'" method="POST"><p data-placement="top" data-toggle="tooltip" title="Orders">
-                                    <button th:value="${client.id}" class="btn btn-success btn-xs" data-title="Orders" data-toggle="modal" data-target="#Orders" >
-                                        <span class="glyphicon glyphicon-folder-close"></span></button></p></form></td>
-                                <td><form th:action="'/market/admin/edit_client/' + ${client.id}" method="POST"><p data-placement="top" data-toggle="tooltip" title="Edit">
-                                    <button th:value="${client.id}" class="btn btn-warning btn-xs" data-title="Edit" data-toggle="modal" data-target="#Edit" >
-                                        <span class="glyphicon glyphicon-zoom-in"></span></button></p></form></td>
-                            </tr>
-                        </div>
-                        </tbody>
-                    </table>
-
-                    <div class="clearfix" style="text-align:center;"></div>
-                    <ul class="pagination pull-right" th:each="page : ${pages}">
-                        <!--<li class="disabled"><a href="#"><span class="glyphicon glyphicon-chevron-left"></span></a></li>-->
-                        <!--<li class="active"><a href="#">1</a></li>-->
-                        <li class="active" th:if="${current_pape} == ${page}" >
-                            <a th:text="${current_page}" th:href="${home_address}+ '/market/admin/manage_clients/' + ${current_page}">current page</a>
-                        </li>
-                        <li th:if="${current_pape} != ${page}">
-                            <a th:text="${page}" th:href="${home_address}+ '/market/admin/manage_clients/' + ${page}">page</a>
-                        </li>
-                        <!--<li><a href="#">5</a></li>-->
-                        <!--<li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span></a></li>-->
-                    </ul>
-
-
-
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-default" style="margin-top:15px">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Credentials</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form th:action="'/market/admin/edit_client/' + ${user.id}" method="POST" th:object="${user}">
+                            <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+                            <!--<input id="id" class="form-control" type="hidden" required="" th:field="*{id}"/><br/>-->
+                            <div class="form-group">
+                                <label for="name">Name: </label>
+                                <p style="color:red;" th:if="${#fields.hasErrors('name')}"  th:errors="*{name}">Description errors</p>
+                                <input id="name" class="form-control" type="text" required="" th:field="*{name}"/><br/>
+                            </div>
+                            <div class="form-group">
+                                <label for="surname">Surname: </label>
+                                <p style="color:red;" th:if="${#fields.hasErrors('surname')}"  th:errors="*{surname}">Description errors</p>
+                                <input id="surname" class="form-control" type="text" required="required" th:field="*{surname}"/><br/>
+                            </div>
+                            <div class="form-group">
+                                <h5 style="color:black;" th:text="${login}" th:value="${login}">Login: </h5>
+                                <br/>
+                            </div>
+                            <div class="form-group">
+                                <ul style="list-style-type: none">
+                                    <!--/*@thymesVar id="sexs" type="by.ras.entity.Sex"*/-->
+                                    <li th:each="sex : ${sexs}">
+                                        <input title="" type="radio" required="" th:value="${sex}" th:field="*{sex}"/>
+                                        <span th:text="${#strings.capitalize(#strings.toLowerCase(sex))}">Each type</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="form-group">
+                                <ul style="list-style-type: none">
+                                    <!--/*@thymesVar id="occupations" type="by.ras.entity.Occupation"*/-->
+                                    <li th:each="occupation : ${occupations}">
+                                        <input title="" type="radio"  required="" th:value="${occupation}" th:field="*{occupation}"/>
+                                        <p th:if="${#fields.hasErrors('occupation')}"  th:errors="*{occupation}">Description errors</p>
+                                        <span th:text="${#strings.capitalize(#strings.toLowerCase(occupation))}">Each type</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--/*@thymesVar id="success" type="boolean"*/-->
+                            <p th:if="${success}">Success</p>
+                            <button type="submit" class="btn btn-default">Edit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-default" style="margin-top:0px">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Address</h3>
+                    </div>
+                    <div class="panel-body">
+                        <!--/*@thymesVar id="contact" type="by.ras.entity.particular.Contact"*/-->
+                        <form th:action="'/market/admin/edit_client/' + ${userId}" method="POST" th:object="${contact}">
+                            <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+                            <div class="form-group">
+                                <label for="country">Country: </label>
+                                <p style="color:red;" th:if="${#fields.hasErrors('country')}"  th:errors="*{country}">Description errors</p>
+                                <input id="country" class="form-control" type="text" required="" th:field="*{country}"/><br/>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City: </label>
+                                <p style="color:red;" th:if="${#fields.hasErrors('city')}"  th:errors="*{city}">Description errors</p>
+                                <input id="city" class="form-control" type="text" required="required" th:field="*{city}"/><br/>
+                            </div>
+                            <div class="form-group">
+                                <label for="street">Street: </label>
+                                <p style="color:red;" th:if="${#fields.hasErrors('street')}"  th:errors="*{street}">Description errors</p>
+                                <input id="street" class="form-control" type="text" required="" th:field="*{street}"/><br/>
+                            </div>
+                            <div class="form-group">
+                                <label for="houseNumber">House number: </label>
+                                <p style="color:red;" th:if="${#fields.hasErrors('houseNumber')}"  th:errors="*{houseNumber}">Description errors</p>
+                                <input id="houseNumber" class="form-control" type="text" required="" th:field="*{houseNumber}"/><br/>
+                            </div>
+                            <div class="form-group">
+                                <label for="phoneNumber">Phone numder: </label>
+                                <p style="color:red;" th:if="${#fields.hasErrors('phoneNumber')}"  th:errors="*{phoneNumber}">Description errors</p>
+                                <input id="phoneNumber" class="form-control" type="text" required="" th:field="*{phoneNumber}"/><br/>
+                            </div>
+                            <button type="submit" class="btn btn-default">Edit</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

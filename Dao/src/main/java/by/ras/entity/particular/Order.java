@@ -22,7 +22,7 @@ import java.util.List;
 public class Order extends BaseEntity{
 
     @Column(name = "order_status")
-    private OrderStatus orderStatus;
+    private String orderStatus;
 
     @Column(name = "date_created")
     private Date date;
@@ -46,5 +46,5 @@ public class Order extends BaseEntity{
     }
 
     //counted sum to be payed for this order
-    private Integer totalSum;
+    private String totalSum;
 }

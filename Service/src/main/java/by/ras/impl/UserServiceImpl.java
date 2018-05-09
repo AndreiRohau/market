@@ -164,6 +164,46 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User updateByAdmin(User user) throws ServiceException {
+        try {
+            User dbUser = userRepository.findOne(user.getId());
+
+            if(dbUser != null){
+                dbUser.setName(user.getName());
+                dbUser.setSurname(user.getSurname());
+                dbUser.setSex(user.getSex());
+                dbUser.setOccupation(user.getOccupation());
+
+                userRepository.saveAndFlush(dbUser);
+            }
+            return dbUser;
+//                log.info("before updates");
+//                userRepository.updateUserName(dbUser.getId(), dbUser.getName());
+//                userRepository.flush();
+//                log.info("name");
+//                userRepository.updateUserSurname(dbUser.getId(), dbUser.getSurname());
+//                userRepository.flush();
+//                log.info("surname");
+//                userRepository.updateUserLogin(dbUser.getId(), dbUser.getLogin());
+//                userRepository.flush();
+//                log.info("login");
+//                userRepository.updateUserPassword(dbUser.getId(), dbUser.getPassword());
+//                userRepository.flush();
+//                log.info("password");
+//                userRepository.updateUserSex(dbUser.getId(), dbUser.getSex());
+//                userRepository.flush();
+//                log.info("Sex");
+//                userRepository.updateUserOccupation(dbUser.getId(), dbUser.getOccupation());
+//                userRepository.flush();
+//                log.info("occupation");
+//                dbUser = userRepository.findOne(dbUser.getId());
+        }catch (Exception e){
+            throw new ServiceException(e);
+        }
+    }
+
+
+    @Override
     public void delete(long id) throws ServiceException {
         try {
             userRepository.delete(id);
