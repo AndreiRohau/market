@@ -129,7 +129,7 @@
                                 <td><input title="model" type="hidden" name="model" value="5s" th:field="*{model}"/></td>
                                 <td><input title="model" type="hidden" name="productType" value="5s" th:field="*{productType}"/></td>
                                 <td><input title="price" type="hidden" name="price" value="1000" th:field="*{price}"/></td>
-                                <button th:text="${current_page}" type="submit" name="product"  class="btn btn-default text-faded">current page</button>
+                                <button th:text="${current_page}" type="submit" name="product"  class="btn btn-info text-faded">current page</button>
                         </form>
                         <form th:if="${current_page} != ${page}" th:action="${home_address} + '/market/products/products/' + ${page}" method="post" th:object="${product}">
                             <td><input title="company" type="hidden" name="company" value="Apple" th:field="*{company}"/></td>
