@@ -1,6 +1,7 @@
 package by.ras.controllers.utils;
 
 import by.ras.entity.Role;
+import by.ras.entity.particular.Product;
 import lombok.extern.log4j.Log4j;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,31 @@ public class InternalMethods {
         long userId = 0;
         userId = (long) request.getSession().getAttribute("user_id");
         return userId;
+    }
+
+    //initialize empty product
+    public static Product initProductFilter(Product p){
+        Product product = new Product();
+        if((p.getCompany() != null) && !(p.getCompany().equals(""))){
+            product.setCompany(p.getCompany());
+        }
+        if((p.getProductName() != null) && !(p.getProductName().equals(""))){
+            product.setProductName(p.getProductName());
+        }
+        if((p.getModel() != null) && !(p.getModel().equals(""))){
+            product.setModel(p.getModel());
+        }
+        if((p.getProductType() != null) && !(p.getProductType().equals(""))){
+            product.setProductType(p.getProductType());
+        }
+        if((p.getPrice() != null) && !(p.getPrice().equals(""))){
+            product.setPrice(p.getPrice());
+        }
+        if((p.getDescription() != null) && !(p.getDescription().equals(""))){
+            product.setDescription(p.getDescription());
+        }
+
+        return product;
     }
 
 }

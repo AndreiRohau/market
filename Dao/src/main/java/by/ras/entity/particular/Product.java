@@ -26,13 +26,13 @@ public class Product extends BaseEntity {
     @Column
     @Pattern(regexp = "^[a-zA-Z0-9][a-zA-Z0-9-_.]{0,20}[a-zA-Z0-9]$", message = "1- It must start and end with a digit or character 2- It must be exactly 4 to 10 character long 3- Allowed Special Characters are _.-")
     private String company;
-    @Column
+    @Column(name = "product_name")
     @Pattern(regexp = "^[a-zA-Z0-9][a-zA-Z0-9-_.]{0,20}[a-zA-Z0-9]$", message = "1- It must start and end with a digit or character 2- It must be exactly 4 to 10 character long 3- Allowed Special Characters are _.-")
     private String productName;
     @Column(unique = true)
     @Pattern(regexp = "^[a-zA-Z0-9][a-zA-Z0-9-_.]{0,20}[a-zA-Z0-9]$", message = "1- It must start and end with a digit or character 2- It must be exactly 4 to 10 character long 3- Allowed Special Characters are _.-")
     private String model;
-    @Column
+    @Column(name = "product_type")
     @Pattern(regexp = "^[a-zA-Z0-9][a-zA-Z0-9-_.]{0,20}[a-zA-Z0-9]$", message = "1- It must start and end with a digit or character 2- It must be exactly 4 to 10 character long 3- Allowed Special Characters are _.-")
     private String productType;
     @Column

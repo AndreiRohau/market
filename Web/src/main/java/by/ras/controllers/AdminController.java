@@ -38,6 +38,7 @@ public class AdminController {
     private final ContactService contactService;
     private final ProductService productServiceService;
     private final OrderService orderService;
+
     @Autowired
     public AdminController(UserService userService, ContactService contactService,
                            ProductService productServiceService, OrderService orderService) {
@@ -75,6 +76,10 @@ public class AdminController {
         return ProductType.values();
     }
 
+    @GetMapping(value = "/admin/adminmain")
+    public String goToAdminmain(Model model){
+        return "market/admin/adminmain";
+    }
 
     //adding product to market
     @GetMapping("/admin/add_product")
@@ -113,6 +118,7 @@ public class AdminController {
         try {
             int OBJECTS_PER_PAGE = 6;
             long maxRows = userService.countRows(); // 21
+            log.info("max rows" + maxRows);
             long maxPage = (maxRows/OBJECTS_PER_PAGE) + (maxRows%OBJECTS_PER_PAGE == 0 ? 0 : 1); //3
             List<Long> pages = new LinkedList<>();
             for(int i = 0; i < maxPage; i++){
@@ -131,7 +137,7 @@ public class AdminController {
 
     @PostMapping("/admin/manage_clients")
     public String manageClients(Model model) throws WebException {
-        log.info("in addProduct method");
+        log.info("in manageClients method");
 
         return "market/admin/manage_clients";
     }
@@ -168,7 +174,7 @@ public class AdminController {
     }
 
 
-
+    //get clint orders
     @GetMapping(value = "/admin/client_orders/{userId}/{currentPage}")
     public String goToClientOrders(Model model, @PathVariable("currentPage") int currentPage,
                                    @PathVariable("userId") long userId, HttpServletRequest request) throws WebException {
@@ -195,10 +201,7 @@ public class AdminController {
     }
 
 
-    @GetMapping(value = "/admin/adminmain")
-    public String goToAdminmain(Model model){
-        return "market/admin/adminmain";
-    }
+
     @GetMapping(value = "/admin/manage_orders")
     public String goToAdminmainManageOrders(Model model){
         return "market/admin/manage_orders";

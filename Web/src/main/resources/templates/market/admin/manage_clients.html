@@ -56,7 +56,7 @@
                         <!--Output PART-->
                         <div th:each="client : ${clients}">
                             <tr>
-                                <td th:text="*{client.date}">Date creation</td><!--creation_date-->
+                                <td th:text="${client.date}">Date creation</td><!--creation_date-->
                                 <td th:text="${client.id}">Id</td><!--user_id-->
                                 <td th:text="${client.login}">Login</td><!--login-->
                                 <td><form action="/market/admin/manage_clients/reset" method="POST">

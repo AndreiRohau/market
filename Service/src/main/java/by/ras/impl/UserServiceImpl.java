@@ -14,9 +14,10 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
 import java.sql.Date;
 
 import java.util.List;

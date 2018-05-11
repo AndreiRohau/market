@@ -1,5 +1,8 @@
 package by.ras;
 
+import by.ras.repository.ContactRepository;
+import by.ras.repository.OrderRepository;
+import by.ras.repository.ProductRepository;
 import by.ras.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.transaction.Transactional;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = UserRepository.class)
-@Transactional
+@ContextConfiguration(classes = {UserRepository.class, ContactRepository.class, ProductRepository.class, OrderRepository.class})
+
 //@SpringBootTest(classes = UserRepository.class)
 @DataJpaTest
 public class BaseTest {

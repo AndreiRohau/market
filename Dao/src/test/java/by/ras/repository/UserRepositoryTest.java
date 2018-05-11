@@ -7,10 +7,7 @@ import lombok.extern.log4j.Log4j;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import sun.awt.image.ImageWatched;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 

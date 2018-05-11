@@ -62,6 +62,11 @@ public class UserController{
         return Sex.values();
     }
 
+    @GetMapping(value = "/user/usermain")
+    public String goToUsermain(Model model){
+        return "market/user/usermain";
+    }
+
     //registration
     @GetMapping("/registration")
     public String goToRegisterUser(Model model){
@@ -118,7 +123,6 @@ public class UserController{
         }
         return "market/user/profile";
     }
-
 
     @PostMapping("/user/profile")
     public String updateUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResultUser,
@@ -219,9 +223,6 @@ public class UserController{
 //        }
 //    }
 
-    @GetMapping(value = "/user/usermain")
-    public String goToUsermain(Model model){
-        return "market/user/usermain";
-    }
+
 
 }

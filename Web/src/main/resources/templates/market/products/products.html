@@ -22,7 +22,7 @@
     <div class="well">
         <ul class="nav nav-tabs">
             <li role="presentation"><a th:href="${home_address} + '/'">Main</a></li>
-            <li role="presentation" class="active"><a th:href="${home_address} + '/market/products/products'">Products</a></li>
+            <li role="presentation" class="active"><a th:href="${home_address} + '/market/products/products/1'">Products</a></li>
         </ul>
         <!--<hr/>-->
         <!--<p></p>-->
@@ -32,7 +32,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h4>Search product, inspect or instantly add to your basket!</h4>
+                <h4>Search, inspect or instantly add desired product to your basket!</h4>
                 <div class="table-responsive">
                     <table id="mytable" class="table table-bordred table-striped" border="1px solid black;">
 
@@ -48,12 +48,22 @@
 
                         <tbody>
                             <tr>
-                                <form action="FrontController" method="post" >
-                                    <td><input title="company" type="text" name="company" value="Apple" /></td>
-                                    <td><input title="name" type="text" name="name" value="iPhone" /></td>
-                                    <td><input title="model" type="text" name="model" value="5s"/></td>
-                                    <td><input title="type" type="text" name="type" value="Cellphone" /></td>
-                                    <td><input title="price" type="text" name="price" value="1000" /></td>
+                                <form th:action="'/market/products/products/1'" method="POST" th:object="${product}">
+                                    <td><input title="company" type="text" name="company" value="Apple" th:field="*{company}"/></td>
+                                    <td><input title="name" type="text" name="name" value="iPhone" th:field="*{productName}"/></td>
+                                    <td><input title="model" type="text" name="model" value="5s" th:field="*{model}"/></td>
+                                    <td>
+                                        <!--<input title="type" type="text" name="type" value="Cellphone" th:field="*{productType}"/></td>-->
+                                        <select class="form-control" th:field="*{productType}" id="productType" th:default="null">
+                                            <option th:each="productType: ${productTypes}" th:text="${productType}" th:value="${productType}">
+                                                Lang
+                                            </option>
+                                            <option value="">
+                                                All
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td><input title="price" type="text" name="price" value="1000" th:field="*{price}"/></td>
                                     <td><button type="submit" class="btn btn-default">Search</button></td>
                                     <td><input type="hidden" name="page_num" value="1"/></td>
                                 </form>
@@ -62,48 +72,74 @@
                         <!--Search PART-->
 
                         <!--Output PART-->
-                            <tr>
-                                <td>Apple</td>
-                                <td>iPhone</td>
-                                <td>5s (64Gb)</td>
-                                <td>Cellphone</td>
-                                <td>1000$</td>
-                                <td><p data-placement="top" data-toggle="tooltip" title="Info">
-                                    <button class="btn btn-warning btn-xs" data-title="Info" data-toggle="modal" data-target="#info" >
-                                        <span class="glyphicon glyphicon-zoom-in"></span></button></p></td>
-                                <td><p data-placement="top" data-toggle="tooltip" title="Add">
-                                    <button class="btn btn-success btn-xs" data-title="Add" data-toggle="modal" data-target="#add" >
-                                        <span class="glyphicon glyphicon-shopping-cart"></span></button></p></td>
+                            <tr th:each="product : ${products}">
+                                <td th:text="${product.company}">Apple</td>
+                                <td th:text="${product.productName}">iPhone</td>
+                                <td th:text="${product.model}">5s (64Gb)</td>
+                                <td th:text="${product.productType}">Cellphone</td>
+                                <td th:text="${product.price}">1000$</td>
+                                <td><form th:action="'/market/products/edit_product/' + ${product.id}" method="GET"><p data-placement="top" data-toggle="tooltip" title="Info">
+                                    <button th:value="${product.id}" class="btn btn-warning btn-xs" data-title="Info" data-toggle="modal" data-target="#Info" >
+                                        <span class="glyphicon glyphicon-zoom-in"></span></button></p></form></td>
+
+                                <!--<td><form th:action="'/market/products/products/add_product/' + ${product.id}" method="POST">-->
+                                    <!--<input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/><p data-placement="top" data-toggle="tooltip" title="Add">-->
+                                    <!--<button th:value="${product.id}" name="product_id" class="btn btn-danger btn-xs" data-title="Add" data-toggle="modal" data-target="#Add" >-->
+                                        <!--<span class="glyphicon glyphicon-refresh"></span></button></p></form></td>-->
+                                <td><form action="/market/products/add_product" method="POST">
+                                    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/><p data-placement="top" data-toggle="tooltip" >
+                                    <button th:if="${product.id} != null" th:value="${product.id}" title="Delete from basket" name="product_id" class="btn btn-success btn-xs" data-title="Reset" data-toggle="modal" data-target="#Delete from basket" >
+                                        <span class="glyphicon glyphicon-ok"></span></button>
+                                    <button th:if="${product.id} == null" th:value="${product.id}" title="Add to basket" name="product_id" class="btn btn-danger btn-xs" data-title="Reset" data-toggle="modal" data-target="#Add to basket" >
+                                        <span class="glyphicon glyphicon-remove"></span></button></p></form></td>
+
+
                             </tr>
-                            <tr>
-                                <td>Apple</td>
-                                <td>iPhone</td>
-                                <td>5s (64Gb)</td>
-                                <td>Cellphone</td>
-                                <td>1000$</td>
-                                <td><p data-placement="top" data-toggle="tooltip" title="Info">
-                                    <button class="btn btn-warning btn-xs" data-title="Info" data-toggle="modal" data-target="#info" >
-                                        <span class="glyphicon glyphicon-zoom-in"></span></button></p></td>
-                                <td><p data-placement="top" data-toggle="tooltip" title="Add">
-                                    <button class="btn btn-success btn-xs" data-title="Add" data-toggle="modal" data-target="#add" >
-                                        <span class="glyphicon glyphicon-shopping-cart"></span></button></p></td>
-                            </tr>
+                            <!--<tr>-->
+                                <!--<td>Apple</td>-->
+                                <!--<td>iPhone</td>-->
+                                <!--<td>5s (64Gb)</td>-->
+                                <!--<td>Cellphone</td>-->
+                                <!--<td>1000$</td>-->
+                                <!--<td><p data-placement="top" data-toggle="tooltip" title="Info">-->
+                                    <!--<button class="btn btn-warning btn-xs" data-title="Info" data-toggle="modal" data-target="#info" >-->
+                                        <!--<span class="glyphicon glyphicon-zoom-in"></span></button></p></td>-->
+                                <!--<td><p data-placement="top" data-toggle="tooltip" title="Add">-->
+                                    <!--<button class="btn btn-success btn-xs" data-title="Add" data-toggle="modal" data-target="#add" >-->
+                                        <!--<span class="glyphicon glyphicon-shopping-cart"></span></button></p></td>-->
+                            <!--</tr>-->
 
 
                         </tbody>
                     </table>
 
-                    <div class="clearfix"></div>
-                    <ul class="pagination pull-right">
-                        <li class="disabled"><a href="#"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
-                        <li class="active"><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                    <div class="clearfix" style="text-align:center;"></div>
+                    <ul th:if="${post_method != true}" class="pagination pull-right" th:each="page : ${pages}">
+                        <li class="active" th:if="${current_page} == ${page}" >
+                            <a th:text="${current_page}" th:href="${home_address}+ '/market/products/products/' + ${current_page}">current page</a>
+                        </li>
+                        <li th:if="${current_page} != ${page}">
+                            <a th:text="${page}" th:href="${home_address}+ '/market/products/products/' + ${page}">page</a>
+                        </li>
                     </ul>
-
+                    <ul th:if="${post_method == true}" class="pagination pull-right" th:each="page : ${pages}">
+                        <form th:if="${current_page} == ${page}" th:action="${home_address} + '/market/products/products/' + ${current_page}" method="post" th:object="${product}">
+                                <td><input title="company" type="hidden" name="company" value="Apple" th:field="*{company}"/></td>
+                                <td><input title="name" type="hidden" name="name" value="iPhone" th:field="*{productName}"/></td>
+                                <td><input title="model" type="hidden" name="model" value="5s" th:field="*{model}"/></td>
+                                <td><input title="model" type="hidden" name="productType" value="5s" th:field="*{productType}"/></td>
+                                <td><input title="price" type="hidden" name="price" value="1000" th:field="*{price}"/></td>
+                                <button th:text="${current_page}" type="submit" name="product"  class="btn btn-default text-faded">current page</button>
+                        </form>
+                        <form th:if="${current_page} != ${page}" th:action="${home_address} + '/market/products/products/' + ${page}" method="post" th:object="${product}">
+                            <td><input title="company" type="hidden" name="company" value="Apple" th:field="*{company}"/></td>
+                            <td><input title="name" type="hidden" name="name" value="iPhone" th:field="*{productName}"/></td>
+                            <td><input title="model" type="hidden" name="model" value="5s" th:field="*{model}"/></td>
+                            <td><input title="model" type="hidden" name="productType" value="5s" th:field="*{productType}"/></td>
+                            <td><input title="price" type="hidden" name="price" value="1000" th:field="*{price}"/></td>
+                            <button th:text="${page}" type="submit" name="product"  class="btn btn-default color-blue"><i class="fa fa-fast-backward"></i></button>
+                        </form>
+                    </ul>
                 </div>
             </div>
         </div>
