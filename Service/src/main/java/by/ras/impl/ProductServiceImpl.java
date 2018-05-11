@@ -3,13 +3,14 @@ package by.ras.impl;
 import by.ras.ProductService;
 import by.ras.entity.ProductType;
 import by.ras.entity.particular.Product;
+import by.ras.entity.particular.User;
 import by.ras.exception.ServiceException;
 import by.ras.repository.ProductRepository;
+import by.ras.repository.UserRepository;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 
@@ -23,10 +24,12 @@ import static by.ras.repository.specification.ProductSpecification.searchProduct
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, UserRepository userRepository) {
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
 
     @PostConstruct
@@ -149,6 +152,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void delete(long id) throws ServiceException {
         try {
+            Product product = productRepository.findOne(id);
+            List<User> users = product.getPersonsHaveReserved();
+            for (User user : users) {
+                user.cancelReserve(product);
+                userRepository.saveAndFlush(user);
+            }
             productRepository.delete(id);
         }catch (Exception e){
             throw new ServiceException(e);
@@ -171,11 +180,24 @@ public class ProductServiceImpl implements ProductService {
     public long countRowsComplex(Product p) throws ServiceException {
         try{
             long maxRows = productRepository.count(searchProducts(p));
-            log.info("in service - count COMPLEX rows" + maxRows);
             return maxRows;
         }catch (Exception e){
             log.info("Errors while executing : productRepository.countCOMPLEX()");
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public boolean isUnique(Product p) throws ServiceException {
+        try{
+            p = productRepository.findByCompanyAndProductNameAndModelAndType(p.getCompany(),
+                p.getProductName(), p.getModel(),p.getProductType());
+
+            return p != null;
+        }catch (Exception e){
+            log.info("Errors while executing : productRepository isUnique(Product p)");
+            throw new ServiceException(e);
+        }
+
     }
 }

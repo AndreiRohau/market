@@ -36,15 +36,15 @@ import java.util.List;
 public class AdminController {
     private final UserService userService;
     private final ContactService contactService;
-    private final ProductService productServiceService;
+    private final ProductService productService;
     private final OrderService orderService;
 
     @Autowired
     public AdminController(UserService userService, ContactService contactService,
-                           ProductService productServiceService, OrderService orderService) {
+                           ProductService productService, OrderService orderService) {
         this.userService = userService;
         this.contactService = contactService;
-        this.productServiceService = productServiceService;
+        this.productService = productService;
         this.orderService = orderService;
     }
 
@@ -96,7 +96,7 @@ public class AdminController {
         String result = "";
         if(!bindingResult.hasErrors()){
             try {
-                product = productServiceService.add(product);
+                product = productService.add(product);
                 if(product.getId() != 0) {
                     result = "New product have been created.";
                 }else {
@@ -304,6 +304,54 @@ public class AdminController {
         model.addAttribute("result", result);
         model.addAttribute("login", user.getLogin());
         return "/market/admin/edit_client";
+    }
+
+    //editing profile
+    @GetMapping("/admin/product/{productId}")
+    public String goToEditProduct(@PathVariable("productId") long productId, @Valid @ModelAttribute("product") Product product,
+                                 BindingResult bindingResult, Model model, HttpServletRequest request) throws WebException {
+        product.setId(productId);
+        try {
+            String result = "";
+            result = request.getParameter("result");
+            log.info("product_id " + productId);
+            product = productService.findById(productId);
+            model.addAttribute("product", product);
+            model.addAttribute("result", result);
+            model.addAttribute("product_id", productId);
+        } catch (ServiceException e) {
+            throw new WebException(e);
+        }
+        return "market/admin/product";
+    }
+    @PostMapping("/admin/product/{productId}")
+    public String editProduct(@PathVariable("productId") long productId, @Valid @ModelAttribute("product") Product product,
+                             BindingResult bindingResult, Model model, HttpServletRequest request) throws WebException {
+
+        product.setId(productId);
+        log.info("**************************");
+        log.info("in POST updatePRODUCT");
+        log.info(product.toString());
+        log.info("**************************");
+        String result = "";
+        try {
+            if((!bindingResult.hasErrors())){
+                log.info(product.toString());
+                product = productService.update(product);
+                log.info(product.toString());
+                model.addAttribute("product", product);
+                log.info("BindingResult bindingResult DOESNT FACE ERRORS");
+                return "redirect:/market/admin/product/" + productId + "?result=success";
+            }
+            result = "Incorrect input data.";
+            model.addAttribute("product", product);
+            model.addAttribute("result", result);
+            return "/market/admin/product";
+        } catch (Exception e) {
+            return "redirect:/market/admin/product/" + productId + "?result=Exception%20look%20at%20logs";
+        }
+
+
     }
 
 }

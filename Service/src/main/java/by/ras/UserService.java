@@ -1,5 +1,6 @@
 package by.ras;
 
+import by.ras.entity.particular.Product;
 import by.ras.entity.particular.User;
 import by.ras.exception.ServiceException;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,8 @@ public interface UserService {
     List<User> findAll(PageRequest pageRequest) throws ServiceException;
 
     User update(User user) throws ServiceException;
+
+    User addReserve(long id, Product product) throws ServiceException;
 
     User updateByAdmin(User user) throws ServiceException;
 

@@ -5,6 +5,7 @@ import by.ras.entity.Role;
 import by.ras.entity.Sex;
 import by.ras.entity.Status;
 import by.ras.entity.particular.Contact;
+import by.ras.entity.particular.Product;
 import by.ras.entity.particular.User;
 import by.ras.exception.ServiceException;
 import by.ras.repository.ContactRepository;
@@ -203,6 +204,16 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public User addReserve(long id, Product product) throws ServiceException {
+        try {
+            User user = userRepository.findOne(id);
+            user.addReserve(product);
+            return userRepository.saveAndFlush(user);
+        }catch (Exception e){
+            throw new ServiceException(e);
+        }
+    }
 
     @Override
     public void delete(long id) throws ServiceException {

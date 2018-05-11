@@ -1,6 +1,7 @@
 package by.ras.controllers;
 
 import by.ras.ProductService;
+import by.ras.UserService;
 import by.ras.WebException.WebException;
 import by.ras.controllers.utils.InternalMethods;
 import by.ras.entity.ProductType;
@@ -27,10 +28,12 @@ import java.util.List;
 @Log4j
 public class ProductController {
 
-    @Autowired
+    private final UserService userService;
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {
+    @Autowired
+    public ProductController(UserService userService, ProductService productService) {
+        this.userService = userService;
         this.productService = productService;
     }
 
@@ -54,6 +57,24 @@ public class ProductController {
         model.addAttribute("home_address", homeAddress);
         return model;
     }
+
+    @PostMapping("/market/products/product/{productId}")
+    public String goToInfo(@PathVariable("productId") long productId, Model model) throws WebException {
+        Object objUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String actualRole = InternalMethods.getActualRole(objUser);
+        try {
+            Product product = productService.findById(productId);
+            model.addAttribute("product", product);
+            if(actualRole.equals("ADMIN")){
+                return "market/admin/product";
+            }else {
+                return "market/user/product";
+            }
+        }catch (ServiceException e){
+            throw new WebException(e);
+        }
+    }
+
 
     @GetMapping(value = "/market/products/products/{currentPage}")
     public String goToProducts(@ModelAttribute("product") Product product, Model model, @PathVariable("currentPage") int currentPage,
@@ -94,6 +115,20 @@ public class ProductController {
                                HttpServletRequest request) throws WebException {
         try {
             log.info("in searchProducts method");
+            log.info("***************************");
+            //optional if authorized as user - adds to his basket. if as ADMIN - deletes drops to trash =)
+            if(request.getParameter("product_id_for_add") != null) {
+                Object objUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                String actualRole = InternalMethods.getActualRole(objUser);
+                Product productExecute = productService.findById(Long.valueOf(request.getParameter("product_id_for_add")));
+                log.info(productExecute);
+                if(actualRole.equals("ADMIN")){
+                    productService.delete(productExecute.getId());
+                } else {
+                    userService.addReserve(InternalMethods.getActualUserId(request), productExecute);
+                }
+            }
+            log.info("***************************");
             log.info("***************************");
             Product filter = InternalMethods.initProductFilter(product);
             log.info(filter);

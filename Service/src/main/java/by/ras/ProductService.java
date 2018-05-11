@@ -16,11 +16,14 @@ public interface ProductService {
     List<Product> findAll(PageRequest pageRequest) throws ServiceException;
     List<Product> findAllComplex(Product p, PageRequest pageRequest) throws ServiceException;
 
-    Product update(Product user) throws ServiceException;
+    Product update(Product product) throws ServiceException;
+//    Product updateByAdmin(Product product) throws ServiceException;
 
     void delete(long id) throws ServiceException;
 
     long countRows() throws ServiceException;
 
     long countRowsComplex(Product product) throws ServiceException;
+    boolean isUnique(Product product) throws ServiceException;
+
 }

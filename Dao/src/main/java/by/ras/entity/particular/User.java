@@ -74,6 +74,7 @@ public class User extends BaseEntity {
 
 
 
+
     public User(String name, String surname, String login, String password, String role, Date date) {
         this.name = name;
         this.surname = surname;
