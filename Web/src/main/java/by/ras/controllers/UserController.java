@@ -178,6 +178,16 @@ public class UserController{
         return "/market/user/profile";
     }
 
+    @GetMapping("/market/user/basket")
+    public String goToBusket(HttpServletRequest request) throws WebException {
+        try{
+
+
+        }catch (ServiceException e){
+            throw new WebException(e);
+        }
+    }
+
 //    @GetMapping("/find/{id}")
 //    public User findUserById(@PathVariable Long id) throws WebException {
 //        try {
