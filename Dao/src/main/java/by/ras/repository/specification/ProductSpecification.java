@@ -24,15 +24,15 @@ public class ProductSpecification {
                 if (filter.getCompany() != null) {
                     predicates.add(cb.equal(root.get("company"), filter.getCompany()));
                 }
-//                if (filter.getProductName() != null) {
-//                    predicates.add(cb.equal(root.get("product_name"), filter.getProductName()));
-//                }
+                if (filter.getProductName() != null) {
+                    predicates.add(cb.equal(root.get("productName"), filter.getProductName()));
+                }
                 if (filter.getModel() != null) {
                     predicates.add(cb.equal(root.get("model"), filter.getModel()));
                 }
-//                if (filter.getProductType() != null) {
-//                    predicates.add(cb.equal(root.get("product_type"), filter.getProductType()));
-//                }
+                if (filter.getProductType() != null) {
+                    predicates.add(cb.equal(root.get("productType"), filter.getProductType()));
+                }
                 if (filter.getPrice() != null) {
                     predicates.add(cb.equal(root.get("price"), filter.getPrice()));
                 }
