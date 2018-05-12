@@ -8,6 +8,7 @@ import by.ras.UserService;
 import by.ras.WebException.WebException;
 import by.ras.controllers.utils.InternalMethods;
 import by.ras.entity.Occupation;
+import by.ras.entity.OrderStatus;
 import by.ras.entity.ProductType;
 import by.ras.entity.Sex;
 import by.ras.entity.particular.Contact;
@@ -175,29 +176,62 @@ public class AdminController {
 
 
     //get clint orders
-    @GetMapping(value = "/admin/client_orders/{userId}/{currentPage}")
-    public String goToClientOrders(Model model, @PathVariable("currentPage") int currentPage,
-                                   @PathVariable("userId") long userId, HttpServletRequest request) throws WebException {
+    @GetMapping(value = "/admin/client_orders/{userId}")
+    public String goToClientOrders(Model model, @PathVariable("userId") long userId,
+                                   HttpServletRequest request) throws WebException {
         try {
-            int OBJECTS_PER_PAGE = 6;
-            long maxRows = orderService.countRows(); // 21
-            long maxPage = (maxRows/OBJECTS_PER_PAGE) + (maxRows%OBJECTS_PER_PAGE == 0 ? 0 : 1); //3
-            List<Long> pages = new LinkedList<>();
-            for(int i = 0; i < maxPage; i++){
-                pages.add(i, maxPage - i);
-            }
-            User user = new User();
-            user.setId(userId);
-            List<Order> orders = orderService.findByUserId(user, new PageRequest((currentPage-1), OBJECTS_PER_PAGE));
-            model.addAttribute("user_id", userId);
+            User user = userService.findById(userId);
+            List<Order> orders = user.getOrders();
+            model.addAttribute("user_name", user.getLogin());
+            model.addAttribute("user_id", user.getId());
             model.addAttribute("orders", orders);
-            model.addAttribute("pages", pages);
-            model.addAttribute("current_page", currentPage);
-            request.getSession().setAttribute("current_page", currentPage);
             return "market/admin/client_orders";
         } catch (ServiceException e) {
             throw new WebException(e);
         }
+    }
+
+    //change order status
+    @PostMapping(value = "/admin/manage_order/change_status/{orderId}")
+    public String changeOrderStatus(Model model, @PathVariable("orderId") long orderId,
+                                    HttpServletRequest request) throws WebException {
+        try {
+
+            log.info("in change order status method");
+            Order order = orderService.findById(orderId);
+            String orderStatus = order.getOrderStatus();
+            if(orderStatus.equals(OrderStatus.NEW.name())){
+                order.setOrderStatus(OrderStatus.ACTIVE.name());
+            } else if(orderStatus.equals(OrderStatus.ACTIVE.name())) {
+                order.setOrderStatus(OrderStatus.CLOSED.name());
+            } else {
+                order.setOrderStatus(OrderStatus.NEW.name());
+            }
+            orderService.editOrder(order);
+            return ("redirect:/market/admin/client_orders/" + order.getUser().getId());
+        }catch (ServiceException e){
+            throw new WebException(e);
+        }
+    }
+
+    //inspect client ORDER
+    @GetMapping("/admin/order/{orderId}")
+    public String goToOrder(Model model, @PathVariable("orderId") long orderId,
+                            HttpServletRequest request) throws WebException {
+        try {
+
+            Order order = orderService.findById(orderId);
+            List<Product> products = order.getOrderedProducts();
+            long userId = order.getUser().getId();
+
+            model.addAttribute("products", products);
+            model.addAttribute("orderId", orderId);
+            model.addAttribute("user_id", userId);
+
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+        return "/market/admin/order";
     }
 
 

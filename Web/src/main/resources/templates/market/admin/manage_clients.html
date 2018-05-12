@@ -77,7 +77,7 @@
                                 <td><form th:action="'/market/admin/edit_client/' + ${client.id}" method="GET"><p data-placement="top" data-toggle="tooltip" title="Edit">
                                     <button th:value="${client.id}" class="btn btn-warning btn-xs" data-title="Edit" data-toggle="modal" data-target="#Edit" >
                                         <span class="glyphicon glyphicon-zoom-in"></span></button></p></form></td>
-                                <td><form th:action="'/market/admin/client_orders/' + ${client.id} + '/1'" method="GET"><p data-placement="top" data-toggle="tooltip" title="Orders">
+                                <td><form th:action="'/market/admin/client_orders/' + ${client.id}" method="GET"><p data-placement="top" data-toggle="tooltip" title="Orders">
                                     <button th:value="${client.id}" class="btn btn-success btn-xs" data-title="Orders" data-toggle="modal" data-target="#Orders" >
                                         <span class="glyphicon glyphicon-folder-close"></span></button></p></form></td>
                             </tr>

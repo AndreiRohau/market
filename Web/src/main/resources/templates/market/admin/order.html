@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Order</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"/>
+
+</head>
+<body>
+<div class="well well-sm">
+    <h2 style="text-align:center;">Order</h2>
+</div>
+
+<!-- HEADER END -->
+
+<div class="well">
+    <ul class="nav nav-tabs">
+        <li role="presentation"><a th:href="${home_address} + '/'">Main</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/products/products/1'">Products</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/admin/add_product'">Add product</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/admin/manage_orders'">Manage orders</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/admin/manage_clients/1'">Manage clients</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/admin/edit_client/' + ${user_id}">Edit client</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/admin/client_orders/' + ${user_id}">Client orders</a></li>
+        <li role="presentation" class="active"><a th:href="${home_address} + '/market/admin/order/' + ${orderId}">Order products</a></li>
+    </ul>
+    <br/>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Requested products.</h4>
+                <div class="table-responsive">
+                    <table id="mytable" class="table table-bordred table-striped" border="1px solid black;">
+
+                        <thead>
+                            <th>Company</th><!-- company -->
+                            <th>Name</th><!-- productName -->
+                            <th>Model</th><!-- model -->
+                            <th>Type</th><!-- productType -->
+                            <th>Price</th><!-- price -->
+                        </thead>
+                        <tbody>
+                            <!--Output PART-->
+                            <tr th:each="p : ${products}">
+                                <td th:text="${p.company}">Apple</td>
+                                <td th:text="${p.productName}">iPhone</td>
+                                <td th:text="${p.model}">5s (64Gb)</td>
+                                <td th:text="${p.productType}">Cellphone</td>
+                                <td th:text="${p.price}">1000$</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- NAVIGATOR -->
+<div class="well well-sm">
+    <h4 style="text-align:center;">Navigator</h4>
+    <ol class="breadcrumb" style="text-align:center;">
+        <li><a th:href="${home_address} + '/'">Main</a></li>
+        <li><a th:href="${home_address} + '/market/admin/manage_clients/1'">Manage clients</a></li>
+        <li><a th:href="${home_address} + '/market/admin/edit_client/' + ${user_id}">Edit client</a></li>
+        <li><a th:href="${home_address} + '/market/admin/client_orders/' + ${user_id}">Client orders</a></li>
+        <li class="active">Order</li>
+
+    </ol>
+</div>
+</body>
+</html>
