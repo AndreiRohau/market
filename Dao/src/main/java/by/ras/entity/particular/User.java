@@ -27,7 +27,7 @@ public class User extends BaseEntity {
     @Pattern(regexp="^[A-Z][a-z]{2,10}$", message="Surname must be alpha with no spaces and first capital. 3-10 letters")
     private String surname;
     @Column(unique = true)
-    @Pattern(regexp="^[a-z][a-z]{2,10}$", message="Login must be alpha with no spaces and first capital. 3-10 letters")
+    @Pattern(regexp="^[A-Za-z0-9]{2,10}$", message="Login must be alpha with no spaces and first capital. 3-10 letters")
     private String login;
     @Column
     // /* <!-- Minimum 3 characters, at least one letter and one number: --> */
@@ -74,6 +74,7 @@ public class User extends BaseEntity {
 
 
 
+
     public User(String name, String surname, String login, String password, String role, Date date) {
         this.name = name;
         this.surname = surname;
@@ -83,7 +84,9 @@ public class User extends BaseEntity {
         this.date = date;
     }
 
-    public User(String name) {
-        this.name = name;
+    public User(String login) {
+        this.login = login;
     }
+
+
 }

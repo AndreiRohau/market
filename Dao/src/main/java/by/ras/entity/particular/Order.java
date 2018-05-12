@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = {"user"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -22,7 +22,7 @@ import java.util.List;
 public class Order extends BaseEntity{
 
     @Column(name = "order_status")
-    private OrderStatus orderStatus;
+    private String orderStatus;
 
     @Column(name = "date_created")
     private Date date;
@@ -40,11 +40,18 @@ public class Order extends BaseEntity{
     )
     private List<Product> orderedProducts = new LinkedList<>();
 
+    public Order(User user, String totalSum) {
+        this.user = user;
+        this.totalSum = totalSum;
+    }
+
     //set products from Order with reserved products
-    public void setOrderProducts(LinkedList<Product> reservedProducts){
+    public void setOrderProducts(List<Product> reservedProducts){
         orderedProducts.addAll(reservedProducts);
     }
 
     //counted sum to be payed for this order
-    private Integer totalSum;
+    private String totalSum;
+
+
 }

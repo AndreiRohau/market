@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Manage orders</title>
+    <title>Products</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -14,7 +14,7 @@
 </head>
 <body>
 <div class="well well-sm">
-    <h2 style="text-align:center;">Manage orders</h2>
+    <h2 style="text-align:center;">Products</h2>
 </div>
 
 <!-- HEADER END -->
@@ -22,89 +22,91 @@
 <div class="well">
     <ul class="nav nav-tabs">
         <li role="presentation"><a th:href="${home_address} + '/'">Main</a></li>
-        <li role="presentation"><a th:href="${home_address} + '/market/products/products'">Products</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/products/products/1'">Products</a></li>
         <li role="presentation"><a th:href="${home_address} + '/market/admin/add_product'">Add product</a></li>
-        <li role="presentation" class="active"><a th:href="${home_address} + '/market/admin/manage_orders'">Manage orders</a></li>
-        <li role="presentation"><a th:href="${home_address} + '/market/admin/manage_clients'">Manage clients</a></li>
+        <li role="presentation" class="active"><a th:href="${home_address} + '/market/admin/manage_orders/1'">Manage orders</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/admin/manage_clients/1'">Manage clients</a></li>
     </ul>
-    <hr/>
-    <p>My advertising</p>
-    <br/>
-
-
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <!--<h4>Bootstrap Snipp for Datatable</h4>-->
+                <h4></h4>
+                <table id="mytable" class="table table-bordred table-striped" >
+                <form th:action="'/market/admin/manage_orders/1'" method="POST" th:object="${order}">
+                    <!--<input title="type" type="text" name="type" value="Cellphone" th:field="*{productType}"/></td>-->
+                    <td><select title="Choose a certain type or ALL" class="form-control" th:field="*{orderStatus}" id="productType" th:default="null">
+                        <option value="">
+                            All
+                        </option>
+                        <option th:each="orderStatus: ${orderStatuses}" th:text="${orderStatus}" th:value="${orderStatus}">
+                            ORDER STATUS
+                        </option>
+                    </select></td>
+                    <td><button type="submit" class="btn btn-default">Search</button></td>
+                    <td><input type="hidden" name="page_num" value="1"/></td>
+                </form>
+                </table>
                 <div class="table-responsive">
                     <table id="mytable" class="table table-bordred table-striped" border="1px solid black;">
-
                         <thead>
-                        <th>Company</th><!-- company -->
-                        <th>Name</th><!-- productName -->
-                        <th>Model</th><!-- model -->
-                        <th>Type</th><!-- productType -->
-                        <th>Price</th><!-- price -->
-                        <th>Description</th><!-- description - a form to get description-->
-                        <th>Add</th><!-- form add to basket -->
+                        <tr>
+                            <th>Date creation</th><!--creation_date-->
+                            <th>Order Id</th><!--order_id-->
+                            <th>Order Status</th><!--OrderStatus-->
+                            <th>Total price</th><!--totalSum-->
+                            <th>Ordered products</th><!-- inspect order with order products -->
+
+                        </tr>
                         </thead>
 
                         <tbody>
                         <!--Search PART-->
-                        <tr >
-                            <form action="FrontController" method="post" >
-                                <td><input title="company" type="text" name="company" value="Apple" /></td>
-                                <td><input title="name" type="text" name="name" value="iPhone" /></td>
-                                <td><input title="model" type="text" name="model" value="5s"/></td>
-                                <td><input title="type" type="text" name="type" value="Cellphone" /></td>
-                                <td><input title="price" type="text" name="price" value="1000" /></td>
-                                <td><input type="submit" name="get_products" value="Search!"/></td>
-                                <td><input type="hidden" name="page_num" value="1"/></td>
-                            </form>
-                        </tr>
+
                         <!--Output PART-->
-                        <tr>
-                            <td>Apple</td>
-                            <td>iPhone</td>
-                            <td>5s (64Gb)</td>
-                            <td>Cellphone</td>
-                            <td>1000$</td>
-                            <td><p data-placement="top" data-toggle="tooltip" title="Info">
-                                <button class="btn btn-warning btn-xs" data-title="Info" data-toggle="modal" data-target="#info" >
-                                    <span class="glyphicon glyphicon-pencil"></span></button></p></td>
-                            <td><p data-placement="top" data-toggle="tooltip" title="Add">
-                                <button class="btn btn-success btn-xs" data-title="Add" data-toggle="modal" data-target="#add" >
-                                    <span class="glyphicon glyphicon-trash"></span></button></p></td>
-                        </tr>
-                        <tr>
-                            <td>Apple</td>
-                            <td>iPhone</td>
-                            <td>5s (64Gb)</td>
-                            <td>Cellphone</td>
-                            <td>1000$</td>
-                            <td><p data-placement="top" data-toggle="tooltip" title="Info">
-                                <button class="btn btn-warning btn-xs" data-title="Info" data-toggle="modal" data-target="#info" >
-                                    <span class="glyphicon glyphicon-pencil"></span></button></p></td>
-                            <td><p data-placement="top" data-toggle="tooltip" title="Add">
-                                <button class="btn btn-success btn-xs" data-title="Add" data-toggle="modal" data-target="#add" >
-                                    <span class="glyphicon glyphicon-trash"></span></button></p></td>
-                        </tr>
-
-
+                        <div th:each="order : ${orders}">
+                            <tr>
+                                <td th:text="*{order.date}">Date creation</td><!--creation_date-->
+                                <td th:text="${order.id}">Id</td><!--order_id-->
+                                <td><form th:action="${home_address} + '/market/admin/manage_order/change_status/' + ${order.id}" method="post" th:object="${order}">
+                                    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+                                    <p data-placement="top" data-toggle="tooltip" >
+                                        <input title="trigger" type="hidden" name="change_order_status_trigger" value="in_manage_orders"/>
+                                        <input title="trigger" type="hidden" name="current_page" th:value="${current_page}"/>
+                                        <input title="trigger" type="hidden" name="orderStatus" th:field="*{orderStatus}"/>
+                                        <button title="NEW" th:if="${order.orderStatus} == NEW" name="order_id" class="btn btn-danger btn-xs" data-title="CLOSED" data-toggle="modal" data-target="#Change status" >
+                                            <span class="glyphicon glyphicon-star-empty"></span></button>
+                                        <button title="ACTIVE" th:if="${order.orderStatus} == ACTIVE" name="order_id" class="btn btn-warning btn-xs" data-title="Active" data-toggle="modal" data-target="#Change status" >
+                                            <span class="glyphicon glyphicon-send"></span></button>
+                                        <button title="CLOSED" th:if="${order.orderStatus} == CLOSED" name="order_id" class="btn btn-success btn-xs" data-title="NEW" data-toggle="modal" data-target="#Change status" >
+                                            <span class="glyphicon glyphicon-ok"></span></button></p></form></td>
+                                <td th:text="${order.totalSum}">Price</td><!--price-->
+                                <td><form th:action="${home_address} + '/market/admin/order/' + ${order.id}" method="GET"><p data-placement="top" data-toggle="tooltip" title="Description">
+                                    <button class="btn btn-primary btn-xs" data-title="Orders" data-toggle="modal" data-target="#Description" >
+                                        <span class="glyphicon glyphicon-folder-close"></span></button></p></form></td>
+                            </tr>
+                        </div>
                         </tbody>
                     </table>
 
-                    <div class="clearfix"></div>
-                    <ul class="pagination pull-right">
-                        <li class="disabled"><a href="#"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
-                        <li class="active"><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                    <div class="clearfix" style="text-align:center;"></div>
+                    <ul th:if="${post_method != true}" class="pagination pull-right" th:each="page : ${pages}">
+                        <li class="active" th:if="${current_page} == ${page}" >
+                            <a th:text="${current_page}" th:href="${home_address}+ '/market/admin/manage_orders/' + ${current_page}">current page</a>
+                        </li>
+                        <li th:if="${current_page} != ${page}">
+                            <a th:text="${page}" th:href="${home_address}+ '/market/admin/manage_orders/' + ${page}">page</a>
+                        </li>
                     </ul>
-
+                    <ul th:if="${post_method == true}" class="pagination pull-right" th:each="page : ${pages}">
+                        <form th:if="${current_page} == ${page}" th:action="${home_address} + '/market/admin/manage_orders/' + ${current_page}" method="post" th:object="${order}">
+                            <input title="company" type="hidden" th:field="*{orderStatus}"/>
+                            <button th:text="${current_page}" type="submit" name="product"  class="btn btn-info text-faded">current page</button>
+                        </form>
+                        <form th:if="${current_page} != ${page}" th:action="${home_address} + '/market/admin/manage_orders/' + ${page}" method="post" th:object="${order}">
+                            <input title="company" type="hidden" name="company" value="Apple" th:field="*{orderStatus}"/>
+                            <button th:text="${page}" type="submit" name="product"  class="btn btn-default color-blue"><i class="fa fa-fast-backward"></i></button>
+                        </form>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -116,12 +118,8 @@
     <h4 style="text-align:center;">Navigator</h4>
     <ol class="breadcrumb" style="text-align:center;">
         <li><a th:href="${home_address} + '/'">Main</a></li>
-        <li class="active">Manage orders</li>
-        <!--<li><a th:href="${home_address} + '/market/registration'">registration</a></li>-->
-        <!--<li><a th:href="${home_address} + '/test'">test</a></li>-->
-        <!--<li><a th:href="${home_address} + '/market/products/products'">products</a></li>-->
-        <!--<li><a th:href="${home_address} + '/market/user/usermain'">usermain</a></li>-->
-        <!--<li><a th:href="${home_address} + '/market/admin/adminmain'">adminmain</a></li>-->
+        <li class="active">Orders</li>
+
     </ol>
 </div>
 </body>

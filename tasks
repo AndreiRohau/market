@@ -1,0 +1,38 @@
+client orders
+
+create getmapping + method + postmapping
+create order repo, and get order list by user in pages
+______________
+edit1 order (edit_order.html
+______________
+
+
+handle orders part
+
+editing and deleting products part
+
+
+___________________________________________________________________________________
+###################################################################################
+___________________________________________________________________________________
+
+
+
+NOW
+
+develop - search products with different parameters
+(complicated queries)
+research criteria API
+
+create add to busket method for user
+
+create order method for user
+
+inspect all orders
+______________
+
+
+
+
+
+

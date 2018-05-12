@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Orders</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"/>
+
+</head>
+<body>
+<div class="well well-sm">
+    <h2 style="text-align:center;">Orders</h2>
+</div>
+
+<!-- HEADER END -->
+
+<div class="well">
+    <ul class="nav nav-tabs">
+        <li role="presentation"><a th:href="${home_address} + '/market/user/usermain'">Main</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/user/profile'">Profile</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/products/products/1'">Products</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/user/basket/'">Basket</a></li>
+        <li role="presentation" class="active"><a th:href="${home_address} + '/market/user/orders/'">Orders</a></li>
+    </ul>
+    <br/>
+    <div class="form-group" align="center">
+        <form title="Refresh" th:action="'/market/user/orders/'" method="GET">
+            <button type="submit" class="btn btn-default">Refresh fields</button>
+        </form>
+        <br/>
+        <p style="color:red;" th:text="${result}">info</p>
+    </div>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table id="mytable" class="table table-bordred table-striped" border="1px solid black;">
+
+                        <thead>
+                        <th>Date</th><!-- orderDate -->
+                        <th>Status</th><!-- orderStatus -->
+                        <th>Total sum</th><!-- totalPrice -->
+                        <th>Call center</th><!-- phone num -->
+
+                        </thead>
+
+                        <tbody>
+                        <!--Output PART-->
+                        <tr th:each="p : ${orders}">
+                            <td th:text="${p.date}"> DATE</td>
+                            <td th:text="${p.orderStatus}"> STATUS </td>
+                            <td th:text="${p.totalSum}">TOTAL SUM</td>
+                            <td> 000000000000 </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- NAVIGATOR -->
+<div class="well well-sm">
+    <h4 style="text-align:center;">Navigator</h4>
+    <ol class="breadcrumb" style="text-align:center;">
+        <li><a th:href="${home_address} + '/'">Main</a></li>
+        <li class="active">Orders</li>
+
+    </ol>
+</div>
+</body>
+</html>

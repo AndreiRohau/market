@@ -40,8 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/market/registration", "/test").anonymous()
 
                 .antMatchers("/market/products/*").authenticated()
-                .antMatchers("/market/admin/*").hasAuthority("ADMIN")
-                .antMatchers("/market/user/*").hasAuthority("CLIENT")
+                .antMatchers("/market/admin/**").hasAuthority("ADMIN")
+                .antMatchers("/market/user/**").hasAuthority("CLIENT")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/").defaultSuccessUrl("/", true).failureUrl("/?error").permitAll()

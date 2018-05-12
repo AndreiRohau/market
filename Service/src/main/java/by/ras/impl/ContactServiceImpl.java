@@ -1,7 +1,6 @@
 package by.ras.impl;
 
 import by.ras.entity.particular.Contact;
-import by.ras.entity.particular.User;
 import by.ras.exception.ServiceException;
 import by.ras.repository.ContactRepository;
 import by.ras.ContactService;
@@ -9,9 +8,8 @@ import by.ras.repository.UserRepository;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
