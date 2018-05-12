@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Edit client</title>
+    <title th:text="${product.productName}">Edit client</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -14,7 +14,7 @@
 </head>
 <body>
 <div class="well well-sm">
-    <h2 style="text-align:center;">Inspect product</h2>
+    <h2 style="text-align:center;" th:text="${product.productName}">Inspect product</h2>
 </div>
 
 <!-- HEADER END -->
@@ -93,7 +93,8 @@
     <h4 style="text-align:center;">Navigator</h4>
     <ol class="breadcrumb" style="text-align:center;">
         <li><a th:href="${home_address} + '/'">Main</a></li>
-        <li class="active"><a th:href="${home_address} + '/market/products/products/1'">Products</a></li>
+        <li><a th:href="${home_address} + '/market/products/products/1'">Products</a></li>
+        <li class="active" th:text="${product.productName}">Product</li>
 
     </ol>
 </div>

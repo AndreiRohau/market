@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Products</title>
+    <title>Basket</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -14,25 +14,35 @@
 </head>
 <body>
 <div class="well well-sm">
-    <h2 style="text-align:center;">Products</h2>
+    <h2 style="text-align:center;">Basket</h2>
 </div>
 
 <!-- HEADER END -->
 
 <div class="well">
     <ul class="nav nav-tabs">
-        <li role="presentation"><a th:href="${home_address} + '/'">Main</a></li>
-        <li role="presentation" class="active"><a th:href="${home_address} + '/market/products/products/1'">Products</a></li>
+        <li role="presentation" ><a th:href="${home_address} + '/market/user/usermain'">Main</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/user/profile'">Profile</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/products/products/1'">Products</a></li>
+        <li role="presentation" class="active" ><a th:href="${home_address} + '/market/user/basket/'">Basket</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/user/orders/'">Orders</a></li>
     </ul>
     <!--<hr/>-->
     <!--<p></p>-->
     <br/>
+    <div class="form-group" align="center">
+        <form th:action="${home_address} + '/market/user/buy'" method="POST">
+            <button type="submit" class="btn btn-default">Create ORDER</button>
+        </form>
+        <br/>
+        <p style="color:red;" th:text="${result}">info</p>
+    </div>
 
 
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h4>Search, inspect or instantly add desired product to your basket!</h4>
+                <h4 th:text="'Total price is ' + ${totalPrice}">Total price</h4>
                 <div class="table-responsive">
                     <table id="mytable" class="table table-bordred table-striped" border="1px solid black;">
 
@@ -43,7 +53,7 @@
                         <th>Type</th><!-- productType -->
                         <th>Price</th><!-- price -->
                         <th>Description</th><!-- description - a form to get description-->
-                        <th>Add</th><!-- form add to basket -->
+                        <th>Remove</th><!-- form add to basket -->
                         </thead>
 
                         <tbody>
@@ -57,29 +67,14 @@
                             <td><form th:action="'/market/products/product/' + ${p.id}" method="POST"><p data-placement="top" data-toggle="tooltip" title="Info">
                                 <button th:value="${p.id}" class="btn btn-warning btn-xs" data-title="Info" data-toggle="modal" data-target="#Info" >
                                     <span class="glyphicon glyphicon-zoom-in"></span></button></p></form></td>
-                            <td><form th:action="${home_address} + '/market/products/products/' + ${current_page}" method="POST" th:object="${product}" ><p data-placement="top" data-toggle="tooltip" title="Add to basket">
-                                <input title="company" type="hidden" name="company" value="Apple" th:field="*{company}"/>
-                                <input title="name" type="hidden" name="name" value="iPhone" th:field="*{productName}"/>
-                                <input title="model" type="hidden" name="model" value="5s" th:field="*{model}"/>
-                                <input title="model" type="hidden" name="productType" value="5s" th:field="*{productType}"/>
-                                <input title="price" type="hidden" name="price" value="1000" th:field="*{price}"/>
-                                <input title="product id for add" type="hidden" th:name="product_id_for_add" th:value="${p.id}"/>
-                                <button title="Add to basket" name="" class="btn btn-info btn-xs" data-title="Add to basket" data-toggle="modal" data-target="#Add to basket" >
-                                    <span class="glyphicon glyphicon-shopping-cart"></span></button></p>
+                            <td><form th:action="${home_address} + '/market/user/remove/' + ${p.id}" method="POST" ><p data-placement="top" data-toggle="tooltip" title="Add to basket">
+                                <button title="Remove" name="" class="btn btn-danger btn-xs" data-title="Add to basket" data-toggle="modal" data-target="#Add to basket" >
+                                    <span class="glyphicon glyphicon-remove"></span></button></p>
                             </form></td>
                         </tr>
                         </tbody>
                     </table>
 
-                    <div class="clearfix" style="text-align:center;"></div>
-                    <ul " class="pagination pull-right" th:each="page : ${pages}">
-                        <li class="active" th:if="${current_page} == ${page}" >
-                            <a th:text="${current_page}" th:href="${home_address}+ '/market/products/products/' + ${current_page}">current page</a>
-                        </li>
-                        <li th:if="${current_page} != ${page}">
-                            <a th:text="${page}" th:href="${home_address}+ '/market/products/products/' + ${page}">page</a>
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>
@@ -90,8 +85,8 @@
 <div class="well well-sm">
     <h4 style="text-align:center;">Navigator</h4>
     <ol class="breadcrumb" style="text-align:center;">
-        <li><a th:href="${home_address} + '/'">main</a></li>
-        <li class="active">products</li>
+        <li><a th:href="${home_address} + '/'">Main</a></li>
+        <li class="active">Basket</li>
 
     </ol>
 </div>

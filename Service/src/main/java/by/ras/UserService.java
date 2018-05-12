@@ -16,6 +16,7 @@ public interface UserService {
     List<User> findAll() throws ServiceException;
     List<User> findAll(PageRequest pageRequest) throws ServiceException;
 
+    User edit(User user) throws ServiceException;
     User update(User user) throws ServiceException;
 
     User addReserve(long id, Product product) throws ServiceException;

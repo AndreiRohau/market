@@ -168,7 +168,7 @@ public class ProductServiceImpl implements ProductService {
     public long countRows() throws ServiceException {
         try{
             long maxRows = productRepository.count();
-            log.info("in service - count rows" + maxRows);
+
             return maxRows;
         }catch (Exception e){
             log.info("Errors while executing : productRepository.count()");

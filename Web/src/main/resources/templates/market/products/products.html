@@ -49,9 +49,9 @@
                         <tbody>
                             <tr>
                                 <form th:action="'/market/products/products/1'" method="POST" th:object="${product}">
-                                    <td><input title="company" type="text" name="company" value="Apple" th:field="*{company}"/></td>
-                                    <td><input title="name" type="text" name="name" value="iPhone" th:field="*{productName}"/></td>
-                                    <td><input title="model" type="text" name="model" value="5s" th:field="*{model}"/></td>
+                                    <td><input class="form-control" title="company" type="text" name="company" value="Apple" th:field="*{company}"/></td>
+                                    <td><input class="form-control" title="name" type="text" name="name" value="iPhone" th:field="*{productName}"/></td>
+                                    <td><input class="form-control" title="model" type="text" name="model" value="5s" th:field="*{model}"/></td>
                                     <td>
                                         <!--<input title="type" type="text" name="type" value="Cellphone" th:field="*{productType}"/></td>-->
                                         <select title="Choose a certain type or ALL" class="form-control" th:field="*{productType}" id="productType" th:default="null">
@@ -63,7 +63,7 @@
                                             </option>
                                         </select>
                                     </td>
-                                    <td><input title="price" type="text" name="price" value="1000" th:field="*{price}"/></td>
+                                    <td><input class="form-control" title="price" type="text" name="price" value="1000" th:field="*{price}"/></td>
                                     <td><button type="submit" class="btn btn-default">Search</button></td>
                                     <td><input type="hidden" name="page_num" value="1"/></td>
                                 </form>
@@ -132,8 +132,8 @@
     <div class="well well-sm">
         <h4 style="text-align:center;">Navigator</h4>
         <ol class="breadcrumb" style="text-align:center;">
-            <li><a th:href="${home_address} + '/'">main</a></li>
-            <li class="active">products</li>
+            <li><a th:href="${home_address} + '/'">Main</a></li>
+            <li class="active">Products</li>
 
         </ol>
     </div>

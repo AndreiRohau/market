@@ -1,18 +1,22 @@
 package by.ras.controllers;
 
 import by.ras.ContactService;
+import by.ras.OrderService;
+import by.ras.ProductService;
 import by.ras.UserService;
 import by.ras.WebException.WebException;
 import by.ras.controllers.utils.InternalMethods;
 import by.ras.entity.Occupation;
+import by.ras.entity.OrderStatus;
 import by.ras.entity.Sex;
 import by.ras.entity.particular.Contact;
+import by.ras.entity.particular.Order;
+import by.ras.entity.particular.Product;
 import by.ras.entity.particular.User;
 import by.ras.exception.ServiceException;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +25,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/market")
@@ -28,10 +36,14 @@ import javax.validation.Valid;
 public class UserController{
     private final UserService userService;
     private final ContactService contactService;
+    private final ProductService productService;
+    private final OrderService orderService;
     @Autowired
-    public UserController(UserService userService, ContactService contactService) {
+    public UserController(UserService userService, ContactService contactService, ProductService productService, OrderService orderService) {
         this.userService = userService;
         this.contactService = contactService;
+        this.productService = productService;
+        this.orderService = orderService;
     }
 
     @Value("${home.address}")
@@ -178,15 +190,77 @@ public class UserController{
         return "/market/user/profile";
     }
 
-    @GetMapping("/market/user/basket")
-    public String goToBusket(HttpServletRequest request) throws WebException {
+    @GetMapping("/user/basket")
+    public String goToBusket(Model model, HttpServletRequest request) throws WebException {
         try{
-
+            User user = userService.findById(InternalMethods.getActualUserId(request));
+            List<Product> products = user.getReservedProducts();
+            long totalPrice = 0;
+            for(Product p : products){
+                totalPrice += Long.valueOf(p.getPrice());
+            }
+            model.addAttribute("result", request.getParameter("result"));
+            model.addAttribute("products", products);
+            model.addAttribute("totalPrice", totalPrice);
+            return "/market/user/basket";
 
         }catch (ServiceException e){
             throw new WebException(e);
         }
     }
+    @PostMapping("/user/remove/{productId}")
+    public String removeProductFromBusket(@PathVariable("productId") long productId, HttpServletRequest request) throws WebException {
+        try {
+            User user = userService.findById(InternalMethods.getActualUserId(request));
+            Product product = productService.findById(productId);
+            user.cancelReserve(product);
+            userService.edit(user);
+            return "redirect:/market/user/basket?result=Product%20removed";
+        }catch (ServiceException e) {
+            throw new WebException(e);
+        }
+    }
+    @PostMapping("/user/buy")
+    public String createNewOrder(HttpServletRequest request, Model model) throws WebException {
+        try {
+            User user = userService.findById(InternalMethods.getActualUserId(request));
+            List<Product> products = new LinkedList<>(user.getReservedProducts());
+            user.getReservedProducts().clear();
+            userService.edit(user);
+            long totalPrice = 0;
+            for(Product p : products){
+                totalPrice += Long.valueOf(p.getPrice());
+            }
+            Order order = new Order(user, String.valueOf(totalPrice));
+            order = orderService.addOrder(order);
+            order.setOrderedProducts(products);
+            log.info(products);
+            log.info(order);
+            orderService.editOrder(order);
+
+            model.addAttribute("user", user);
+            model.addAttribute("result", "Order created");
+            model.addAttribute("products", products);
+            model.addAttribute("totalPrice", totalPrice);
+            return "redirect:/market/user/orders";
+        }catch (ServiceException e) {
+            throw new WebException(e);
+        }
+    }
+    @GetMapping("/user/orders")
+    public String goToOrders(HttpServletRequest request, Model model) throws WebException {
+        try{
+            User user = userService.findById(InternalMethods.getActualUserId(request));
+
+            List<Order> orders = user.getOrders();
+
+            model.addAttribute("orders", orders);
+            return "/market/user/orders";
+        }catch (ServiceException e){
+            throw new WebException(e);
+        }
+    }
+
 
 //    @GetMapping("/find/{id}")
 //    public User findUserById(@PathVariable Long id) throws WebException {

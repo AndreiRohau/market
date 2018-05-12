@@ -109,16 +109,17 @@ public class UserServiceImpl implements UserService {
                 user.setStatus(Status.ACTIVE.name());
                 user.setRole(Role.CLIENT.name());
                 userRepository.saveAndFlush(user);
-//                contactRepository.saveAndFlush(Contact.builder()
-//                        .user(user)
-//                        .country("default")
-//                        .city("default")
-//                        .street("default")
-//                        .houseNumber("00")
-//                        .phoneNumber("000000000000")
-//                        .build());
             }
             return user;
+        }catch (Exception e){
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public User edit(User user) throws ServiceException {
+        try{
+            return userRepository.saveAndFlush(user);
         }catch (Exception e){
             throw new ServiceException(e);
         }
@@ -140,26 +141,6 @@ public class UserServiceImpl implements UserService {
                 userRepository.saveAndFlush(dbUser);
             }
             return dbUser;
-//                log.info("before updates");
-//                userRepository.updateUserName(dbUser.getId(), dbUser.getName());
-//                userRepository.flush();
-//                log.info("name");
-//                userRepository.updateUserSurname(dbUser.getId(), dbUser.getSurname());
-//                userRepository.flush();
-//                log.info("surname");
-//                userRepository.updateUserLogin(dbUser.getId(), dbUser.getLogin());
-//                userRepository.flush();
-//                log.info("login");
-//                userRepository.updateUserPassword(dbUser.getId(), dbUser.getPassword());
-//                userRepository.flush();
-//                log.info("password");
-//                userRepository.updateUserSex(dbUser.getId(), dbUser.getSex());
-//                userRepository.flush();
-//                log.info("Sex");
-//                userRepository.updateUserOccupation(dbUser.getId(), dbUser.getOccupation());
-//                userRepository.flush();
-//                log.info("occupation");
-//                dbUser = userRepository.findOne(dbUser.getId());
         }catch (Exception e){
             throw new ServiceException(e);
         }
@@ -179,26 +160,6 @@ public class UserServiceImpl implements UserService {
                 userRepository.saveAndFlush(dbUser);
             }
             return dbUser;
-//                log.info("before updates");
-//                userRepository.updateUserName(dbUser.getId(), dbUser.getName());
-//                userRepository.flush();
-//                log.info("name");
-//                userRepository.updateUserSurname(dbUser.getId(), dbUser.getSurname());
-//                userRepository.flush();
-//                log.info("surname");
-//                userRepository.updateUserLogin(dbUser.getId(), dbUser.getLogin());
-//                userRepository.flush();
-//                log.info("login");
-//                userRepository.updateUserPassword(dbUser.getId(), dbUser.getPassword());
-//                userRepository.flush();
-//                log.info("password");
-//                userRepository.updateUserSex(dbUser.getId(), dbUser.getSex());
-//                userRepository.flush();
-//                log.info("Sex");
-//                userRepository.updateUserOccupation(dbUser.getId(), dbUser.getOccupation());
-//                userRepository.flush();
-//                log.info("occupation");
-//                dbUser = userRepository.findOne(dbUser.getId());
         }catch (Exception e){
             throw new ServiceException(e);
         }

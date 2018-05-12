@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = {"personsHaveReserved", "ordersHaveReserved"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

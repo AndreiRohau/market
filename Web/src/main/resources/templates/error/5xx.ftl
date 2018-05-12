@@ -24,14 +24,7 @@
 <div class="well well-sm">
     <h4 style="text-align:center;">Navigator</h4>
     <ol class="breadcrumb" style="text-align:center;">
-        <li><a href="/">index</a></li>
-        <li><a href="/">index</a></li>
-        <li><a href="/market/registration">registration</a></li>
-        <li><a href="/test">test</a></li>
-        <li><a href="/market/products/products">products</a></li>
-        <li><a href="/market/user/usermain">usermain</a></li>
-        <li><a href="/market/admin/adminmain">adminmain</a></li>
-        <li class="active">index</li>
+        <li><a href="/">Main</a></li>
     </ol>
 </div>
 

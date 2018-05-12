@@ -1,6 +1,7 @@
 package by.ras.impl;
 
 import by.ras.OrderService;
+import by.ras.entity.OrderStatus;
 import by.ras.entity.particular.Order;
 import by.ras.entity.particular.User;
 import by.ras.exception.ServiceException;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -30,6 +32,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order addOrder(Order order) throws ServiceException {
         try {
+            order.setDate(new Date(System.currentTimeMillis()));
+            order.setOrderStatus(OrderStatus.NEW.name());
             return orderRepository.saveAndFlush(order);
         }catch (Exception e) {
             throw new ServiceException(e);

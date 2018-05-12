@@ -82,6 +82,7 @@ public class ProductController {
         try {
             int OBJECTS_PER_PAGE = 6;
             long maxRows = productService.countRows(); // 42
+            log.info("in service - count rows" + maxRows);
             long maxPage = (maxRows/OBJECTS_PER_PAGE) + (maxRows%OBJECTS_PER_PAGE == 0 ? 0 : 1); //3
 
             //

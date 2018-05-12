@@ -17,4 +17,5 @@ public interface OrderService {
     List<Order> findByUserId(User user, PageRequest pageRequest) throws ServiceException;
 
     long countRows() throws ServiceException;
+
 }
