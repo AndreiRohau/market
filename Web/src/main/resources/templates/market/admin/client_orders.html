@@ -14,7 +14,7 @@
 </head>
 <body>
 <div class="well well-sm">
-    <h2 style="text-align:center;">Clients orders</h2>
+    <h2 style="text-align:center;" th:text="'All ' + ${user_login} + '\'s orders'">Clients orders</h2>
 </div>
 
 <!-- HEADER END -->
@@ -24,7 +24,7 @@
         <li role="presentation"><a th:href="${home_address} + '/'">Main</a></li>
         <li role="presentation"><a th:href="${home_address} + '/market/products/products/1'">Products</a></li>
         <li role="presentation"><a th:href="${home_address} + '/market/admin/add_product'">Add product</a></li>
-        <li role="presentation"><a th:href="${home_address} + '/market/admin/manage_orders'">Manage orders</a></li>
+        <li role="presentation"><a th:href="${home_address} + '/market/admin/manage_orders/1'">Manage orders</a></li>
         <li role="presentation"><a th:href="${home_address} + '/market/admin/manage_clients/1'">Manage clients</a></li>
         <li role="presentation"><a th:href="${home_address} + '/market/admin/edit_client/' + ${user_id}">Edit client</a></li>
         <li role="presentation" class="active"><a th:href="${home_address} + '/market/admin/client_orders/' + ${user_id}">Client orders</a></li>
@@ -59,6 +59,7 @@
                                 <td th:text="${order.id}">Id</td><!--order_id-->
                                 <td><form th:action="${home_address} + '/market/admin/manage_order/change_status/' + ${order.id}" method="post">
                                     <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+                                    <input title="trigger" type="hidden" name="change_order_status_trigger" value="in_client_orders"/>
                                     <p data-placement="top" data-toggle="tooltip" >
                                     <button th:if="${order.orderStatus} == NEW" name="order_id" class="btn btn-danger btn-xs" data-title="CLOSED" data-toggle="modal" data-target="#Change status" >
                                         <span class="glyphicon glyphicon-star-empty"></span></button>

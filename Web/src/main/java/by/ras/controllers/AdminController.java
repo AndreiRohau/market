@@ -73,8 +73,16 @@ public class AdminController {
         return new Product();
     }
     @ModelAttribute("productTypes")
-    public ProductType[] productTypesTypes(){
+    public ProductType[] productTypes(){
         return ProductType.values();
+    }
+    @ModelAttribute("order")
+    public Order orderModel(){
+        return new Order();
+    }
+    @ModelAttribute("orderStatuses")
+    public OrderStatus[] orderStatuses(){
+        return OrderStatus.values();
     }
 
     @GetMapping(value = "/admin/adminmain")
@@ -184,6 +192,7 @@ public class AdminController {
             List<Order> orders = user.getOrders();
             model.addAttribute("user_name", user.getLogin());
             model.addAttribute("user_id", user.getId());
+            model.addAttribute("user_login", user.getLogin());
             model.addAttribute("orders", orders);
             return "market/admin/client_orders";
         } catch (ServiceException e) {
@@ -191,28 +200,7 @@ public class AdminController {
         }
     }
 
-    //change order status
-    @PostMapping(value = "/admin/manage_order/change_status/{orderId}")
-    public String changeOrderStatus(Model model, @PathVariable("orderId") long orderId,
-                                    HttpServletRequest request) throws WebException {
-        try {
 
-            log.info("in change order status method");
-            Order order = orderService.findById(orderId);
-            String orderStatus = order.getOrderStatus();
-            if(orderStatus.equals(OrderStatus.NEW.name())){
-                order.setOrderStatus(OrderStatus.ACTIVE.name());
-            } else if(orderStatus.equals(OrderStatus.ACTIVE.name())) {
-                order.setOrderStatus(OrderStatus.CLOSED.name());
-            } else {
-                order.setOrderStatus(OrderStatus.NEW.name());
-            }
-            orderService.editOrder(order);
-            return ("redirect:/market/admin/client_orders/" + order.getUser().getId());
-        }catch (ServiceException e){
-            throw new WebException(e);
-        }
-    }
 
     //inspect client ORDER
     @GetMapping("/admin/order/{orderId}")
@@ -234,14 +222,113 @@ public class AdminController {
         return "/market/admin/order";
     }
 
+    //manager of orders ________________
+    @GetMapping(value = "/admin/manage_orders/{currentPage}")
+    public String goToOrders(@ModelAttribute("product") Order order, Model model, @PathVariable("currentPage") int currentPage,
+                               HttpServletRequest request) throws WebException {
+        try {
+            int OBJECTS_PER_PAGE = 6;
+            long maxRows = orderService.countRows(); // 42
+            log.info("in service - count rows" + maxRows);
+            long maxPage = (maxRows/OBJECTS_PER_PAGE) + (maxRows%OBJECTS_PER_PAGE == 0 ? 0 : 1); //3
 
+            //
+            List<Long> pages = new LinkedList<>();
+            for(int i = 0; i < maxPage; i++){
+                pages.add(i, maxPage - i);
+            }
 
-    @GetMapping(value = "/admin/manage_orders")
-    public String goToAdminmainManageOrders(Model model){
-        return "market/admin/manage_orders";
+            log.info("***************************");
+            List<Order> orders = orderService.findAll(new PageRequest((currentPage-1), OBJECTS_PER_PAGE));
+
+            log.info("***************************");
+            log.info("***************************");
+            orders.forEach(i -> log.info(i));
+            log.info("***************************");
+            log.info("***************************");
+            log.info("***************************");
+            model.addAttribute("orders", orders);
+            model.addAttribute("pages", pages);
+            model.addAttribute("current_page", ((long) currentPage));
+            request.getSession().setAttribute("current_page", currentPage);
+            return "/market/admin/manage_orders";
+
+        } catch (ServiceException e) {
+            throw new WebException(e);
+        }
+    }
+    @PostMapping("/admin/manage_orders/{currentPage}")
+    public String searchOrders(@ModelAttribute("order") Order order, Model model,
+                                 @PathVariable("currentPage") int currentPage,
+                                 HttpServletRequest request) throws WebException {
+        try {
+            log.info("in searchOrders method");
+            log.info("***************************");
+            log.info("***************************");
+            log.info("***************************");
+            Order filter = InternalMethods.initOrderFilter(order);
+            log.info(filter);
+
+            int OBJECTS_PER_PAGE = 6;
+            long maxRows = orderService.countRowsComplex(filter); // 21
+            log.info("max rows " + maxRows);
+            long maxPage = (maxRows/OBJECTS_PER_PAGE) + (maxRows%OBJECTS_PER_PAGE == 0 ? 0 : 1); //3
+            List<Long> pages = new LinkedList<>();
+            for(int i = 0; i < maxPage; i++){
+                pages.add(i, maxPage - i);
+            }
+
+            log.info("***************************");
+            log.info("***************************");
+            List<Order> orders = orderService.findAllComplex(filter, new PageRequest((currentPage-1), OBJECTS_PER_PAGE));
+            log.info("size " + orders.size());
+            log.info("***************************");
+            log.info("***************************");
+            orders.forEach(i -> log.info(i));
+            log.info("***************************");
+            log.info("***************************");
+            log.info("***************************");
+            model.addAttribute("post_method", true);
+            model.addAttribute("order", order);
+            model.addAttribute("orders", orders);
+            model.addAttribute("pages", pages);
+            model.addAttribute("current_page", ((long) currentPage));
+            request.getSession().setAttribute("current_page", currentPage);
+            return "/market/admin/manage_orders";
+        } catch (ServiceException e) {
+            throw new WebException(e);
+        }
     }
 
+    //change order status
+    @PostMapping(value = "/admin/manage_order/change_status/{orderId}")
+    public String changeOrderStatus(@ModelAttribute("order") Order order, Model model, @PathVariable("orderId") long orderId,
+                                    HttpServletRequest request) throws WebException {
+        try {
 
+            log.info("in change order status method");
+            Order orderToChange = orderService.findById(orderId);
+            String orderStatus = orderToChange.getOrderStatus();
+            if(orderStatus.equals(OrderStatus.NEW.name())){
+                orderToChange.setOrderStatus(OrderStatus.ACTIVE.name());
+            } else if(orderStatus.equals(OrderStatus.ACTIVE.name())) {
+                orderToChange.setOrderStatus(OrderStatus.CLOSED.name());
+            } else {
+                orderToChange.setOrderStatus(OrderStatus.NEW.name());
+            }
+            orderService.editOrder(orderToChange);
+            model.addAttribute("order", order);
+            if(request.getParameter("change_order_status_trigger").equals("in_manage_orders")){
+                return searchOrders(order, model, Integer.parseInt(request.getParameter("current_page")), request);
+                //return ("redirect:/market/admin/manage_orders/" + request.getParameter("current_page"));
+            }else {
+                return goToClientOrders(model, orderToChange.getUser().getId(), request);
+                //("redirect:/market/admin/client_orders/" + order.getUser().getId());
+            }
+        }catch (ServiceException e){
+            throw new WebException(e);
+        }
+    }
 
 
 //to delete

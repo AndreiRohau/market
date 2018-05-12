@@ -60,12 +60,11 @@ public class ProductController {
 
     @PostMapping("/market/products/product/{productId}")
     public String goToInfo(@PathVariable("productId") long productId, Model model) throws WebException {
-        Object objUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String actualRole = InternalMethods.getActualRole(objUser);
         try {
             Product product = productService.findById(productId);
             model.addAttribute("product", product);
-            if(actualRole.equals("ADMIN")){
+            if(InternalMethods.getRole().equals("ADMIN")){
+                //todo
                 return "market/admin/product";
             }else {
                 return "market/user/product";
@@ -103,6 +102,7 @@ public class ProductController {
             model.addAttribute("products", products);
             model.addAttribute("pages", pages);
             model.addAttribute("current_page", ((long) currentPage));
+            model.addAttribute("role", InternalMethods.getRole());
             request.getSession().setAttribute("current_page", currentPage);
             return "/market/products/products";
         } catch (ServiceException e) {
@@ -158,6 +158,7 @@ public class ProductController {
             model.addAttribute("products", products);
             model.addAttribute("pages", pages);
             model.addAttribute("current_page", ((long) currentPage));
+            model.addAttribute("role", InternalMethods.getRole());
             request.getSession().setAttribute("current_page", currentPage);
             return "/market/products/products";
         } catch (ServiceException e) {

@@ -1,8 +1,10 @@
 package by.ras.controllers.utils;
 
 import by.ras.entity.Role;
+import by.ras.entity.particular.Order;
 import by.ras.entity.particular.Product;
 import lombok.extern.log4j.Log4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,6 +13,17 @@ public class InternalMethods {
 
     //find out ROLE of the authorized user
     public static String getActualRole(Object objUser) {
+        String role = null;
+        if(objUser instanceof org.springframework.security.core.userdetails.User) {
+            org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) objUser;
+            role = Role.valueOf(String.valueOf(userDetails.getAuthorities().toArray()[0])).name();
+            log.info(" method=private String getActualRole() : Actual role is " + role);
+        }
+        return role;
+    }
+    //find out ROLE of the authorized user
+    public static String getRole() {
+        Object objUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String role = null;
         if(objUser instanceof org.springframework.security.core.userdetails.User) {
             org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) objUser;
@@ -50,6 +63,14 @@ public class InternalMethods {
         }
 
         return product;
+    }
+    //initialize empty product
+    public static Order initOrderFilter(Order o){
+        Order order = new Order();
+        if((o.getOrderStatus() != null) && !(o.getOrderStatus().equals(""))){
+            order.setOrderStatus(o.getOrderStatus());
+        }
+        return order;
     }
 
 }

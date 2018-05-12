@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Manage orders</title>
+    <title>Products</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -14,7 +14,7 @@
 </head>
 <body>
 <div class="well well-sm">
-    <h2 style="text-align:center;">Manage orders</h2>
+    <h2 style="text-align:center;">Products</h2>
 </div>
 
 <!-- HEADER END -->
@@ -24,61 +24,64 @@
         <li role="presentation"><a th:href="${home_address} + '/'">Main</a></li>
         <li role="presentation"><a th:href="${home_address} + '/market/products/products/1'">Products</a></li>
         <li role="presentation"><a th:href="${home_address} + '/market/admin/add_product'">Add product</a></li>
-        <li role="presentation" class="active"><a th:href="${home_address} + '/market/admin/manage_orders'">Manage orders</a></li>
+        <li role="presentation" class="active"><a th:href="${home_address} + '/market/admin/manage_orders/1'">Manage orders</a></li>
         <li role="presentation"><a th:href="${home_address} + '/market/admin/manage_clients/1'">Manage clients</a></li>
     </ul>
-    <br/>
-
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h4>All clients are here</h4>
+                <h4></h4>
+                <table id="mytable" class="table table-bordred table-striped" >
+                <form th:action="'/market/admin/manage_orders/1'" method="POST" th:object="${order}">
+                    <!--<input title="type" type="text" name="type" value="Cellphone" th:field="*{productType}"/></td>-->
+                    <td><select title="Choose a certain type or ALL" class="form-control" th:field="*{orderStatus}" id="productType" th:default="null">
+                        <option value="">
+                            All
+                        </option>
+                        <option th:each="orderStatus: ${orderStatuses}" th:text="${orderStatus}" th:value="${orderStatus}">
+                            ORDER STATUS
+                        </option>
+                    </select></td>
+                    <td><button type="submit" class="btn btn-default">Search</button></td>
+                    <td><input type="hidden" name="page_num" value="1"/></td>
+                </form>
+                </table>
                 <div class="table-responsive">
                     <table id="mytable" class="table table-bordred table-striped" border="1px solid black;">
                         <thead>
                         <tr>
                             <th>Date creation</th><!--creation_date-->
-                            <th>Id</th><!--user_id-->
-                            <th>Login</th><!--login-->
-                            <th>Password</th><!--password-->
-                            <th>Name</th><!--name-->
-                            <th>Surname</th><!--surname-->
-                            <th>Role</th><!--role-->
-                            <th>Sex</th><!--sex-->
-                            <th>Status</th><!--account_status-->
-                            <th>Occupation</th><!--occupation-->
-                            <th>Edit</th><!-- Inspect for Editing -->
-                            <th>Orders</th><!--List<Order>-->
+                            <th>Order Id</th><!--order_id-->
+                            <th>Order Status</th><!--OrderStatus-->
+                            <th>Total price</th><!--totalSum-->
+                            <th>Ordered products</th><!-- inspect order with order products -->
+
                         </tr>
                         </thead>
 
                         <tbody>
+                        <!--Search PART-->
+
                         <!--Output PART-->
-                        <div th:each="client : ${clients}">
+                        <div th:each="order : ${orders}">
                             <tr>
-                                <td th:text="*{client.date}">Date creation</td><!--creation_date-->
-                                <td th:text="${client.id}">Id</td><!--user_id-->
-                                <td th:text="${client.login}">Login</td><!--login-->
-                                <td><form action="/market/admin/manage_clients/reset" method="POST">
-                                    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/><p data-placement="top" data-toggle="tooltip" title="Reset [q1Q]">
-                                    <button th:value="${client.id}" name="user_id" class="btn btn-danger btn-xs" data-title="Reset" data-toggle="modal" data-target="#Reset" >
-                                        <span class="glyphicon glyphicon-refresh"></span></button></p></form></td>
-                                <td th:text="${client.name}">Name</td><!--name-->
-                                <td th:text="${client.surname}">Surname</td><!--surname-->
-                                <td th:text="${client.role}">Role</td><!--role-->
-                                <td th:text="${client.sex}">Sex</td><!--sex-->
-                                <td><form action="/market/admin/manage_clients/change_status" method="POST">
-                                    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/><p data-placement="top" data-toggle="tooltip" th:title="${client.status}">
-                                    <button th:if="${client.status} != BLOCKED" th:value="${client.id}" name="user_id" class="btn btn-success btn-xs" data-title="Reset" data-toggle="modal" data-target="#Change status" >
-                                        <span class="glyphicon glyphicon-ok"></span></button>
-                                    <button th:if="${client.status} == BLOCKED" th:value="${client.id}" name="user_id" class="btn btn-danger btn-xs" data-title="Reset" data-toggle="modal" data-target="#Change status" >
-                                        <span class="glyphicon glyphicon-remove"></span></button></p></form></td>
-                                <td th:text="${client.occupation}">Occupation</td><!--occupation-->
-                                <td><form th:action="'/market/admin/edit_client/' + ${client.id}" method="GET"><p data-placement="top" data-toggle="tooltip" title="Edit">
-                                    <button th:value="${client.id}" class="btn btn-warning btn-xs" data-title="Edit" data-toggle="modal" data-target="#Edit" >
-                                        <span class="glyphicon glyphicon-zoom-in"></span></button></p></form></td>
-                                <td><form th:action="'/market/admin/client_orders/' + ${client.id} + '/1'" method="GET"><p data-placement="top" data-toggle="tooltip" title="Orders">
-                                    <button th:value="${client.id}" class="btn btn-success btn-xs" data-title="Orders" data-toggle="modal" data-target="#Orders" >
+                                <td th:text="*{order.date}">Date creation</td><!--creation_date-->
+                                <td th:text="${order.id}">Id</td><!--order_id-->
+                                <td><form th:action="${home_address} + '/market/admin/manage_order/change_status/' + ${order.id}" method="post" th:object="${order}">
+                                    <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+                                    <p data-placement="top" data-toggle="tooltip" >
+                                        <input title="trigger" type="hidden" name="change_order_status_trigger" value="in_manage_orders"/>
+                                        <input title="trigger" type="hidden" name="current_page" th:value="${current_page}"/>
+                                        <input title="trigger" type="hidden" name="orderStatus" th:field="*{orderStatus}"/>
+                                        <button title="NEW" th:if="${order.orderStatus} == NEW" name="order_id" class="btn btn-danger btn-xs" data-title="CLOSED" data-toggle="modal" data-target="#Change status" >
+                                            <span class="glyphicon glyphicon-star-empty"></span></button>
+                                        <button title="ACTIVE" th:if="${order.orderStatus} == ACTIVE" name="order_id" class="btn btn-warning btn-xs" data-title="Active" data-toggle="modal" data-target="#Change status" >
+                                            <span class="glyphicon glyphicon-send"></span></button>
+                                        <button title="CLOSED" th:if="${order.orderStatus} == CLOSED" name="order_id" class="btn btn-success btn-xs" data-title="NEW" data-toggle="modal" data-target="#Change status" >
+                                            <span class="glyphicon glyphicon-ok"></span></button></p></form></td>
+                                <td th:text="${order.totalSum}">Price</td><!--price-->
+                                <td><form th:action="${home_address} + '/market/admin/order/' + ${order.id}" method="GET"><p data-placement="top" data-toggle="tooltip" title="Description">
+                                    <button class="btn btn-primary btn-xs" data-title="Orders" data-toggle="modal" data-target="#Description" >
                                         <span class="glyphicon glyphicon-folder-close"></span></button></p></form></td>
                             </tr>
                         </div>
@@ -86,13 +89,23 @@
                     </table>
 
                     <div class="clearfix" style="text-align:center;"></div>
-                    <ul class="pagination pull-right" th:each="page : ${pages}">
+                    <ul th:if="${post_method != true}" class="pagination pull-right" th:each="page : ${pages}">
                         <li class="active" th:if="${current_page} == ${page}" >
-                            <a th:text="${current_page}" th:href="${home_address}+ '/market/admin/manage_clients/' + ${current_page}">current page</a>
+                            <a th:text="${current_page}" th:href="${home_address}+ '/market/admin/manage_orders/' + ${current_page}">current page</a>
                         </li>
                         <li th:if="${current_page} != ${page}">
-                            <a th:text="${page}" th:href="${home_address}+ '/market/admin/manage_clients/' + ${page}">page</a>
+                            <a th:text="${page}" th:href="${home_address}+ '/market/admin/manage_orders/' + ${page}">page</a>
                         </li>
+                    </ul>
+                    <ul th:if="${post_method == true}" class="pagination pull-right" th:each="page : ${pages}">
+                        <form th:if="${current_page} == ${page}" th:action="${home_address} + '/market/admin/manage_orders/' + ${current_page}" method="post" th:object="${order}">
+                            <input title="company" type="hidden" th:field="*{orderStatus}"/>
+                            <button th:text="${current_page}" type="submit" name="product"  class="btn btn-info text-faded">current page</button>
+                        </form>
+                        <form th:if="${current_page} != ${page}" th:action="${home_address} + '/market/admin/manage_orders/' + ${page}" method="post" th:object="${order}">
+                            <input title="company" type="hidden" name="company" value="Apple" th:field="*{orderStatus}"/>
+                            <button th:text="${page}" type="submit" name="product"  class="btn btn-default color-blue"><i class="fa fa-fast-backward"></i></button>
+                        </form>
                     </ul>
                 </div>
             </div>
@@ -105,7 +118,8 @@
     <h4 style="text-align:center;">Navigator</h4>
     <ol class="breadcrumb" style="text-align:center;">
         <li><a th:href="${home_address} + '/'">Main</a></li>
-        <li class="active">Manage clients</li>
+        <li class="active">Orders</li>
+
     </ol>
 </div>
 </body>

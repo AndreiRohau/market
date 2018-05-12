@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.util.List;
 
+import static by.ras.repository.specification.OrderSpecification.searchOrders;
+
 @Service
 @Transactional
 @Log4j
@@ -59,6 +61,31 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> findAll(PageRequest pageRequest) throws ServiceException {
+        try {
+            return orderRepository.findAll(pageRequest).getContent();
+        }catch (Exception e){
+            log.info("Errors while executing : productRepository.findAll(pageRequest).getContent()");
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<Order> findAllComplex(Order filter, PageRequest pageRequest) throws ServiceException {
+        try {
+            log.info("service - final COMPLEX - p = " + filter);
+            List<Order> orders = orderRepository.findAll(searchOrders(filter), pageRequest).getContent();
+
+            log.info(orders.size());
+            orders.forEach(i -> log.info(i));
+            return orders;
+        }catch (Exception e){
+            log.info("Errors while executing : productRepository.findAll(pageRequest).getContent()");
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public Order editOrder(Order order) throws ServiceException {
         try {
             return orderRepository.saveAndFlush(order);
@@ -88,6 +115,18 @@ public class OrderServiceImpl implements OrderService {
             return maxRows;
         }catch (Exception e){
             log.info("Errors while executing : orderRepository.countRows()");
+            throw new ServiceException(e);
+        }
+    }
+
+
+    @Override
+    public long countRowsComplex(Order o) throws ServiceException {
+        try{
+            long maxRows = orderRepository.count(searchOrders(o));
+            return maxRows;
+        }catch (Exception e){
+            log.info("Errors while executing : productRepository.countCOMPLEX()");
             throw new ServiceException(e);
         }
     }
