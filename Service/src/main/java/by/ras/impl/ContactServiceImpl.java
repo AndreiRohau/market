@@ -18,35 +18,16 @@ import java.util.List;
 public class ContactServiceImpl implements ContactService {
 
     private final ContactRepository contactRepository;
-    private final UserRepository userRepository;
+
     @Autowired
-    public ContactServiceImpl(ContactRepository contactRepository, UserRepository userRepository) {
+    public ContactServiceImpl(ContactRepository contactRepository) {
         this.contactRepository = contactRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
     public Contact addContact(Contact contact) throws ServiceException {
         try {
             return contactRepository.saveAndFlush(contact);
-        }catch (Exception e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public Contact findById(long id) throws ServiceException {
-        try {
-            return contactRepository.findOne(id);
-        }catch (Exception e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public void delete(long id) throws ServiceException {
-        try {
-            contactRepository.delete(id);
         }catch (Exception e) {
             throw new ServiceException(e);
         }
@@ -67,15 +48,6 @@ public class ContactServiceImpl implements ContactService {
 
             }
             return contact;
-        }catch (Exception e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public List<Contact> getAll() throws ServiceException {
-        try {
-            return contactRepository.findAll();
         }catch (Exception e) {
             throw new ServiceException(e);
         }

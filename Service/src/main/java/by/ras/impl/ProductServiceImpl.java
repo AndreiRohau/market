@@ -64,7 +64,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product add(Product product) throws ServiceException {
         try {
-
             if((productRepository.findByCompanyAndProductNameAndModelAndType(product.getCompany(),
                     product.getProductName(), product.getModel(), product.getProductType()) == null)
                     && (product.getId() == 0)) {
@@ -98,42 +97,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product findIfSuchExists(Product product) throws ServiceException {
-        try {
-            return productRepository.findByCompanyAndProductNameAndModelAndType(product.getCompany(),
-                    product.getProductName(), product.getModel(), product.getProductType());
-        }catch (Exception e){
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public boolean isUnique(Product p) throws ServiceException {
-        try{
-            p = productRepository.findByCompanyAndProductNameAndModelAndType(p.getCompany(),
-                    p.getProductName(), p.getModel(),p.getProductType());
-
-            return p != null;
-        }catch (Exception e){
-            log.info("Errors while executing : productRepository isUnique(Product p)");
-            throw new ServiceException(e);
-        }
-
-    }
-
-    @Override
     public Product findById(long id) throws ServiceException {
         try {
             return productRepository.findOne(id);
-        }catch (Exception e){
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public List<Product> findAll() throws ServiceException {
-        try {
-            return productRepository.findAll();
         }catch (Exception e){
             throw new ServiceException(e);
         }
@@ -152,12 +118,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> findAllComplex(Product p, PageRequest pageRequest) throws ServiceException {
         try {
-            log.info("service - final COMPLEX - p = " + p);
-            List<Product> products = productRepository.findAll(searchProducts(p), pageRequest).getContent();
-
-            log.info(products.size());
-            products.forEach(i -> log.info(i));
-            return products;
+            return productRepository.findAll(searchProducts(p), pageRequest).getContent();
         }catch (Exception e){
             log.info("Errors while executing : productRepository.findAll(pageRequest).getContent()");
             throw new ServiceException(e);
@@ -182,9 +143,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public long countRows() throws ServiceException {
         try{
-            long maxRows = productRepository.count();
-
-            return maxRows;
+            return productRepository.count();
         }catch (Exception e){
             log.info("Errors while executing : productRepository.count()");
             throw new ServiceException(e);
@@ -194,8 +153,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public long countRowsComplex(Product p) throws ServiceException {
         try{
-            long maxRows = productRepository.count(searchProducts(p));
-            return maxRows;
+            return productRepository.count(searchProducts(p));
         }catch (Exception e){
             log.info("Errors while executing : productRepository.countCOMPLEX()");
             throw new ServiceException(e);

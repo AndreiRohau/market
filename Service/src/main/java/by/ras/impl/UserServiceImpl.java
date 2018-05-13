@@ -173,15 +173,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(long id) throws ServiceException {
-        try {
-            userRepository.delete(id);
-        }catch (Exception e){
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
     public User findByLogin(String login) throws ServiceException {
         try {
             return userRepository.findByLogin(login);
@@ -194,15 +185,6 @@ public class UserServiceImpl implements UserService {
     public User findById(long id) throws ServiceException {
         try {
             return userRepository.findOne(id);
-        }catch (Exception e){
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public List<User> findAll() throws ServiceException {
-        try {
-            return userRepository.findAll();
         }catch (Exception e){
             throw new ServiceException(e);
         }

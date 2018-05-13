@@ -29,9 +29,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if(user == null){
             throw new UsernameNotFoundException("Username doesn't exist.");
         }
-        log.info("************************");
-        log.info(user.getRole());
-        log.info("************************");
         return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(),
                 Collections.singletonList(new SimpleGrantedAuthority(user.getRole())));
     }

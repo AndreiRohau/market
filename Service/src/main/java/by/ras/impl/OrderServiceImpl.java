@@ -52,15 +52,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAll() throws ServiceException {
-        try {
-            return orderRepository.findAll();
-        }catch (Exception e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
     public List<Order> findAll(PageRequest pageRequest) throws ServiceException {
         try {
             return orderRepository.findAll(pageRequest).getContent();
@@ -73,11 +64,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> findAllComplex(Order filter, PageRequest pageRequest) throws ServiceException {
         try {
-            log.info("service - final COMPLEX - p = " + filter);
             List<Order> orders = orderRepository.findAll(searchOrders(filter), pageRequest).getContent();
-
-            log.info(orders.size());
-            orders.forEach(i -> log.info(i));
             return orders;
         }catch (Exception e){
             log.info("Errors while executing : productRepository.findAll(pageRequest).getContent()");
@@ -95,36 +82,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void delete(long id) throws ServiceException {
-        try {
-            orderRepository.delete(id);
-        }catch (Exception e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public List<Order> findByUserId(User user, PageRequest pageRequest) throws ServiceException {
-        return null;
-    }
-
-    @Override
     public long countRows() throws ServiceException {
         try{
-            long maxRows = orderRepository.count();
-            return maxRows;
+            return orderRepository.count();
         }catch (Exception e){
             log.info("Errors while executing : orderRepository.countRows()");
             throw new ServiceException(e);
         }
     }
 
-
     @Override
-    public long countRowsComplex(Order o) throws ServiceException {
+    public long countRowsComplex(Order order) throws ServiceException {
         try{
-            long maxRows = orderRepository.count(searchOrders(o));
-            return maxRows;
+            return orderRepository.count(searchOrders(order));
         }catch (Exception e){
             log.info("Errors while executing : productRepository.countCOMPLEX()");
             throw new ServiceException(e);
