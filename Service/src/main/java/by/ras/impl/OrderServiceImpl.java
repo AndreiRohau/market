@@ -64,8 +64,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> findAllComplex(Order filter, PageRequest pageRequest) throws ServiceException {
         try {
-            List<Order> orders = orderRepository.findAll(searchOrders(filter), pageRequest).getContent();
-            return orders;
+            return orderRepository.findAll(searchOrders(filter), pageRequest).getContent();
         }catch (Exception e){
             log.info("Errors while executing : productRepository.findAll(pageRequest).getContent()");
             throw new ServiceException(e);
