@@ -40,8 +40,6 @@ public class User extends BaseEntity {
     private String occupation;
     @Column
     private String role;
-    @Column(name = "account_status")
-    private String status;
     @Column(name = "creation_date")
     private Date date;
 

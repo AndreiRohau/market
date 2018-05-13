@@ -7,10 +7,7 @@ import by.ras.ProductService;
 import by.ras.UserService;
 import by.ras.WebException.WebException;
 import by.ras.controllers.utils.InternalMethods;
-import by.ras.entity.Occupation;
-import by.ras.entity.OrderStatus;
-import by.ras.entity.ProductType;
-import by.ras.entity.Sex;
+import by.ras.entity.*;
 import by.ras.entity.particular.Contact;
 import by.ras.entity.particular.Order;
 import by.ras.entity.particular.Product;
@@ -171,11 +168,10 @@ public class AdminController {
     @PostMapping("/admin/manage_clients/change_status")
     public String changeClientsStatus(HttpServletRequest request) throws WebException {
         try {
-            long userId = Long.parseLong(request.getParameter("user_id"));
             User user = new User();
-            user.setId(userId);
+            user.setId(Long.parseLong(request.getParameter("user_id")));
             //reset status to opposite;
-            userService.changeStatus(user);
+            userService.changeRole(user);
             return ("redirect:/market/admin/manage_clients/" + ((int) request.getSession().getAttribute("current_page")));
         } catch (ServiceException e) {
             throw new WebException(e);

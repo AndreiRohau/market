@@ -18,6 +18,7 @@ import javax.transaction.Transactional;
 
 //@SpringBootTest(classes = UserRepository.class)
 @DataJpaTest
+@Transactional
 public class BaseTest {
 
 }

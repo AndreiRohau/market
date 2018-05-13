@@ -26,7 +26,7 @@ public interface UserService {
     void delete(long id) throws ServiceException;
     User resetPassword(User user) throws ServiceException;
 
-    User changeStatus(User user) throws ServiceException;
+    User changeRole(User user) throws ServiceException;
 
     long countRows() throws ServiceException;
 }

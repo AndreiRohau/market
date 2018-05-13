@@ -12,6 +12,4 @@ import javax.transaction.Transactional;
 @Repository
 @Transactional
 public interface OrderPagingRepository extends PagingAndSortingRepository<Order, Long> {
-
-    Page<Order> findByUser(User user, Pageable pageable);
 }

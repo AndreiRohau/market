@@ -3,7 +3,6 @@ package by.ras.impl;
 import by.ras.entity.Occupation;
 import by.ras.entity.Role;
 import by.ras.entity.Sex;
-import by.ras.entity.Status;
 import by.ras.entity.particular.Contact;
 import by.ras.entity.particular.Product;
 import by.ras.entity.particular.User;
@@ -50,7 +49,6 @@ public class UserServiceImpl implements UserService {
                         .sex(Sex.MALE.name())
                         .occupation(Occupation.EMPLOYED.name())
                         .role(Role.ADMIN.name())
-                        .status(Status.ACTIVE.name())
                         .date(new Date(System.currentTimeMillis()))
                         .build();
                 userRepository.saveAndFlush(admin);
@@ -64,7 +62,6 @@ public class UserServiceImpl implements UserService {
                         .sex(Sex.MALE.name())
                         .occupation(Occupation.UNEMPLOYED.name())
                         .role(Role.CLIENT.name())
-                        .status(Status.ACTIVE.name())
                         .date(new Date(System.currentTimeMillis()))
                         .build();
                 userRepository.saveAndFlush(user);
@@ -106,7 +103,6 @@ public class UserServiceImpl implements UserService {
         try {
             if((userRepository.findByLogin(user.getLogin()) == null) && (user.getId() == 0)) {
                 user.setDate(new Date(System.currentTimeMillis()));
-                user.setStatus(Status.ACTIVE.name());
                 user.setRole(Role.CLIENT.name());
                 userRepository.saveAndFlush(user);
             }
@@ -239,20 +235,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User changeStatus(User user) throws ServiceException {
+    public User changeRole(User user) throws ServiceException {
         try {
             User dbUser = userRepository.findOne(user.getId());
-
-            if(dbUser != null){
-                log.info(dbUser.getStatus());
-                if(dbUser.getStatus().equals(Status.BLOCKED.name())){
-                    dbUser.setStatus(Status.ACTIVE.name());
-                }else if (dbUser.getStatus().equals(Status.ACTIVE.name())){
-                    dbUser.setStatus(Status.BLOCKED.name());
+            if(!dbUser.getRole().equals(Role.ADMIN.name()) && dbUser != null){
+                log.info(dbUser.getRole());
+                if(dbUser.getRole().equals(Role.BANNED.name())){
+                    dbUser.setRole(Role.CLIENT.name());
+                }else if (dbUser.getRole().equals(Role.CLIENT.name())){
+                    dbUser.setRole(Role.BANNED.name());
                 }
                 dbUser = userRepository.saveAndFlush(dbUser);
             }
-            log.info(dbUser.getStatus());
             return dbUser;
         }catch (Exception e){
             log.info("Errors while executing : userRepository.findAll(pageRequest).getContent()");

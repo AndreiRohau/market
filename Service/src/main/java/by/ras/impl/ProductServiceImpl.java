@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 
@@ -19,7 +20,7 @@ import java.util.List;
 import static by.ras.repository.specification.ProductSpecification.searchProducts;
 
 @Service
-//@Transactional
+@Transactional
 @Log4j
 public class ProductServiceImpl implements ProductService {
 
@@ -107,6 +108,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public boolean isUnique(Product p) throws ServiceException {
+        try{
+            p = productRepository.findByCompanyAndProductNameAndModelAndType(p.getCompany(),
+                    p.getProductName(), p.getModel(),p.getProductType());
+
+            return p != null;
+        }catch (Exception e){
+            log.info("Errors while executing : productRepository isUnique(Product p)");
+            throw new ServiceException(e);
+        }
+
+    }
+
+    @Override
     public Product findById(long id) throws ServiceException {
         try {
             return productRepository.findOne(id);
@@ -187,17 +202,4 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    @Override
-    public boolean isUnique(Product p) throws ServiceException {
-        try{
-            p = productRepository.findByCompanyAndProductNameAndModelAndType(p.getCompany(),
-                p.getProductName(), p.getModel(),p.getProductType());
-
-            return p != null;
-        }catch (Exception e){
-            log.info("Errors while executing : productRepository isUnique(Product p)");
-            throw new ServiceException(e);
-        }
-
-    }
 }

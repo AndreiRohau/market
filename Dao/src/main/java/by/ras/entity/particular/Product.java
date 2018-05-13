@@ -52,4 +52,12 @@ public class Product extends BaseEntity {
     @ManyToMany(mappedBy = "orderedProducts")
     List<Order> ordersHaveReserved = new LinkedList<>();
 
+    public Product(String company, String productName, String model, String productType, String price, String description) {
+        this.company = company;
+        this.productName = productName;
+        this.model = model;
+        this.productType = productType;
+        this.price = price;
+        this.description = description;
+    }
 }

@@ -25,40 +25,6 @@ public class ContactServiceImpl implements ContactService {
         this.userRepository = userRepository;
     }
 
-//
-//    @PostConstruct
-//    public void init() throws ServiceException {
-//        try {
-//            User user = userRepository.findOne(1L);
-//            Contact contact;
-//            if(user.getContact() == null) {
-//                contact = Contact.builder()
-//                        .user(user)
-//                        .country("Cyprus")
-//                        .city("Sunny")
-//                        .street("Money")
-//                        .houseNumder("100")
-//                        .phoneNumber("000000000000")
-//                        .build();
-//                contactRepository.saveAndFlush(contact);
-//            }
-//            user = userRepository.findOne(2L);
-//            if(user.getContact() == null) {
-//                contact = Contact.builder()
-//                        .user(user)
-//                        .country("Belarus")
-//                        .city("Minsk")
-//                        .street("Marx")
-//                        .houseNumder("10")
-//                        .phoneNumber("375291234567")
-//                        .build();
-//                contactRepository.saveAndFlush(contact);
-//            }
-//        }catch (Exception e) {
-//            throw new ServiceException(e);
-//        }
-//    }
-
     @Override
     public Contact addContact(Contact contact) throws ServiceException {
         try {
@@ -98,23 +64,6 @@ public class ContactServiceImpl implements ContactService {
                 dbContact.setHouseNumber(contact.getHouseNumber());
                 dbContact.setPhoneNumber(contact.getPhoneNumber());
                 contactRepository.saveAndFlush(dbContact);
-
-//                log.info("before updates");
-//                contactRepository.updateCountry(dbContact.getId(), dbContact.getCountry());
-//                contactRepository.flush();
-//                log.info("surname");
-//                contactRepository.updateCity(dbContact.getId(), dbContact.getCity());
-//                contactRepository.flush();
-//                log.info("login");
-//                contactRepository.updateStreet(dbContact.getId(), dbContact.getStreet());
-//                contactRepository.flush();
-//                log.info("password");
-//                contactRepository.updateHouseNumber(dbContact.getId(), dbContact.getHouseNumber());
-//                contactRepository.flush();
-//                log.info("Sex");
-//                contactRepository.updatePhoneNumber(dbContact.getId(), dbContact.getPhoneNumber());
-//                contactRepository.flush();
-//                log.info("occupation");
 
             }
             return contact;
