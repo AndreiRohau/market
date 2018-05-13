@@ -155,8 +155,6 @@ public class AdminController {
             long userId = Long.parseLong(request.getParameter("user_id"));
             User user = new User();
             user.setId(userId);
-            //reset to [q1Q}
-            user.setPassword("q1Q");
             userService.resetPassword(user);
             return ("redirect:/market/admin/manage_clients/" + ((int) request.getSession().getAttribute("current_page")));
         } catch (ServiceException e) {

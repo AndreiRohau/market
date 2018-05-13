@@ -113,6 +113,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findById(long id) throws ServiceException {
+        try {
+            return userRepository.findOne(id);
+        }catch (Exception e){
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public User findByLogin(String login) throws ServiceException {
+        try {
+            return userRepository.findByLogin(login);
+        }catch (Exception e){
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<User> findAll(PageRequest pageRequest) throws ServiceException {
+        try {
+            return userRepository.findAll(pageRequest).getContent();
+        }catch (Exception e){
+            log.info("Errors while executing : userRepository.findAll(pageRequest).getContent()");
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public User edit(User user) throws ServiceException {
         try{
             return userRepository.saveAndFlush(user);
@@ -173,40 +201,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByLogin(String login) throws ServiceException {
-        try {
-            return userRepository.findByLogin(login);
-        }catch (Exception e){
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public User findById(long id) throws ServiceException {
-        try {
-            return userRepository.findOne(id);
-        }catch (Exception e){
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public List<User> findAll(PageRequest pageRequest) throws ServiceException {
-        try {
-            return userRepository.findAll(pageRequest).getContent();
-        }catch (Exception e){
-            log.info("Errors while executing : userRepository.findAll(pageRequest).getContent()");
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
     public User resetPassword(User user) throws ServiceException {
         try {
             User dbUser = userRepository.findOne(user.getId());
-
+            //reset to [q1Q}
             if(dbUser != null){
-                dbUser.setPassword(user.getPassword());
+                dbUser.setPassword("q1Q");
                 userRepository.saveAndFlush(dbUser);
             }
             return dbUser;
@@ -239,8 +239,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public long countRows() throws ServiceException {
         try{
-            long maxRows = userRepository.count();
-            return maxRows;
+            return userRepository.count();
         }catch (Exception e){
             log.info("Errors while executing : userRepository.countRows()");
             throw new ServiceException(e);

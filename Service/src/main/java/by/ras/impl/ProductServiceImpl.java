@@ -75,27 +75,6 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-
-    @Override
-    public Product update(Product product) throws ServiceException {
-        try {
-            Product dbProduct = productRepository.findOne(product.getId());
-
-            if(dbProduct != null){
-                dbProduct.setCompany(product.getCompany());
-                dbProduct.setProductName(product.getProductName());
-                dbProduct.setModel(product.getModel());
-                dbProduct.setProductType(product.getProductType());
-                dbProduct.setPrice(product.getPrice());
-                dbProduct.setDescription(product.getDescription());
-                productRepository.saveAndFlush(dbProduct);
-            }
-            return product;
-        }catch (Exception e) {
-            throw new ServiceException(e);
-        }
-    }
-
     @Override
     public Product findById(long id) throws ServiceException {
         try {
@@ -121,6 +100,26 @@ public class ProductServiceImpl implements ProductService {
             return productRepository.findAll(searchProducts(p), pageRequest).getContent();
         }catch (Exception e){
             log.info("Errors while executing : productRepository.findAll(pageRequest).getContent()");
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public Product update(Product product) throws ServiceException {
+        try {
+            Product dbProduct = productRepository.findOne(product.getId());
+
+            if(dbProduct != null){
+                dbProduct.setCompany(product.getCompany());
+                dbProduct.setProductName(product.getProductName());
+                dbProduct.setModel(product.getModel());
+                dbProduct.setProductType(product.getProductType());
+                dbProduct.setPrice(product.getPrice());
+                dbProduct.setDescription(product.getDescription());
+                productRepository.saveAndFlush(dbProduct);
+            }
+            return product;
+        }catch (Exception e) {
             throw new ServiceException(e);
         }
     }

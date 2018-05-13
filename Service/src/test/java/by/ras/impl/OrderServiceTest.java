@@ -2,10 +2,7 @@ package by.ras.impl;
 
 import by.ras.BaseTest;
 import by.ras.OrderService;
-import by.ras.entity.Occupation;
 import by.ras.entity.OrderStatus;
-import by.ras.entity.Role;
-import by.ras.entity.Sex;
 import by.ras.entity.particular.Order;
 import by.ras.entity.particular.User;
 import by.ras.repository.OrderRepository;
@@ -16,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
 

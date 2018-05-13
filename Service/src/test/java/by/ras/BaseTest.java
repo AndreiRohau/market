@@ -8,6 +8,7 @@ import by.ras.repository.ContactRepository;
 import by.ras.repository.OrderRepository;
 import by.ras.repository.ProductRepository;
 import by.ras.repository.UserRepository;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -23,5 +24,8 @@ import javax.transaction.Transactional;
 @DataJpaTest
 @Transactional
 public class BaseTest {
+    @Test
+    public void nothing() {
 
+    }
 }
