@@ -52,7 +52,7 @@ public class ProductRepositoryTest extends BaseTest {
     private List<Product> fillTableProducts() {
         String[] companies = {"Apple", "Samsung", "XiaoMi", "Huawei", "Microsoft", "Dell", "Asus"};
         String[] types = {ProductType.CELLPHONE.name(), ProductType.LAPTOP.name(), ProductType.TV.name(),
-                ProductType.TABLET.name(), ProductType.MP3.name(), ProductType.DISPLAY.name(),};
+                ProductType.TABLET.name(), ProductType.MP3.name(), ProductType.DISPLAY.name()};
         List<Product> products = new LinkedList<>();
         for (int i = 0; i < companies.length; i++) {
             for (int m = 0; m < types.length; m++) {

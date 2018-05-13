@@ -13,7 +13,6 @@ import javax.transaction.Transactional;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {UserRepository.class, ContactRepository.class, ProductRepository.class, OrderRepository.class})
-
 //@SpringBootTest(classes = UserRepository.class)
 @DataJpaTest
 @Transactional
