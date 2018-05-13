@@ -7,7 +7,6 @@ import by.ras.UserService;
 import by.ras.WebException.WebException;
 import by.ras.controllers.utils.InternalMethods;
 import by.ras.entity.Occupation;
-import by.ras.entity.OrderStatus;
 import by.ras.entity.Sex;
 import by.ras.entity.particular.Contact;
 import by.ras.entity.particular.Order;
@@ -25,8 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.sql.Date;
-import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -90,7 +87,6 @@ public class UserController{
     @PostMapping("/registration")
     public String registerUser(@Valid @ModelAttribute("user") User user,
                                BindingResult bindingResult, Model model) throws WebException {
-        log.info("in reg method");
         String result = "";
         if(!bindingResult.hasErrors()){
             try {
@@ -101,7 +97,6 @@ public class UserController{
                     result = "New user and default contacts have been created.";
                 }else {
                     result = "User have not been saved. Probably, such login exists.";
-                    log.error(result);
                 }
             } catch (ServiceException e) {
                 throw new WebException(e);
@@ -121,21 +116,17 @@ public class UserController{
         try {
             String result = "";
             result = request.getParameter("result");
-            log.info("user_id " + userId);
             user = userService.findById(userId);
             contact = user.getContact();
-            if(user!=null){log.info("user " + user.toString());log.info("contact " + contact.toString());}
             model.addAttribute("user", user);
             model.addAttribute("contact", contact);
             model.addAttribute("login", user.getLogin());
             model.addAttribute("result", result);
-
         } catch (ServiceException e) {
             throw new WebException(e);
         }
         return "market/user/profile";
     }
-
     @PostMapping("/user/profile")
     public String updateUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResultUser,
                              @Valid @ModelAttribute("contact") Contact contact, BindingResult bindingResultContact,
@@ -143,35 +134,20 @@ public class UserController{
         long userId = InternalMethods.getActualUserId(request);
         user.setId(userId);
         contact.setId(userId);
-        log.info("**************************");
-        log.info("in POST updateUser");
-        log.info(user.toString());
-        log.info(contact.toString());
-        log.info("**************************");
         String result = "";
-            try {
-                if((contact.getCountry() == null) & (!bindingResultUser.hasErrors())){
-                    log.info(user.toString());
-                    user = userService.update(user); //null?
-
-                    log.info(user.toString());
-                    model.addAttribute("user", user);
-                    log.info("BindingResult bindingResult DOESNT FACE ERRORS - 1");
-                    return "redirect:/market/user/profile?result=success";
-
-                }else if((user.getName() == null) & (!bindingResultContact.hasErrors())){
-                    log.info(contact.toString());
-                    contact = contactService.editContact(contact);
-                    log.info(contact.toString());
-                    model.addAttribute("contact", contact);
-                    log.info("BindingResult bindingResult DOESNT FACE ERRORS - 2 upd contact");
-                    return "redirect:/market/user/profile?result=success";
-                }
-            } catch (Exception e) {
-                return "redirect:/market/user/profile?result=incorrect%20login";
+        try {
+            if((contact.getCountry() == null) & (!bindingResultUser.hasErrors())){
+                user = userService.update(user); //null?
+                model.addAttribute("user", user);
+                return "redirect:/market/user/profile?result=success";
+            }else if((user.getName() == null) & (!bindingResultContact.hasErrors())){
+                contact = contactService.editContact(contact);
+                model.addAttribute("contact", contact);
+                return "redirect:/market/user/profile?result=success";
             }
-
-        log.info("user_id " + userId);
+        } catch (Exception e) {
+            return "redirect:/market/user/profile?result=incorrect%20login";
+        }
         try {
             if (contact.getCountry() == null) {
                 contact = userService.findById(userId).getContact();
@@ -179,7 +155,6 @@ public class UserController{
             } else if(user.getName() == null){
                 user = userService.findById(userId);
                 model.addAttribute("user", user);
-
             }
         }catch (ServiceException e){
             throw new WebException(e);
@@ -203,11 +178,11 @@ public class UserController{
             model.addAttribute("products", products);
             model.addAttribute("totalPrice", totalPrice);
             return "/market/user/basket";
-
         }catch (ServiceException e){
             throw new WebException(e);
         }
     }
+
     @PostMapping("/user/remove/{productId}")
     public String removeProductFromBusket(@PathVariable("productId") long productId, HttpServletRequest request) throws WebException {
         try {
@@ -220,6 +195,7 @@ public class UserController{
             throw new WebException(e);
         }
     }
+
     @PostMapping("/user/buy")
     public String createNewOrder(HttpServletRequest request, Model model) throws WebException {
         try {
@@ -234,10 +210,7 @@ public class UserController{
             Order order = new Order(user, String.valueOf(totalPrice));
             order = orderService.addOrder(order);
             order.setOrderedProducts(products);
-            log.info(products);
-            log.info(order);
             orderService.editOrder(order);
-
             model.addAttribute("user", user);
             model.addAttribute("result", "Order created");
             model.addAttribute("products", products);
@@ -247,66 +220,17 @@ public class UserController{
             throw new WebException(e);
         }
     }
+
     @GetMapping("/user/orders")
     public String goToOrders(HttpServletRequest request, Model model) throws WebException {
         try{
             User user = userService.findById(InternalMethods.getActualUserId(request));
-
             List<Order> orders = user.getOrders();
-
             model.addAttribute("orders", orders);
             return "/market/user/orders";
         }catch (ServiceException e){
             throw new WebException(e);
         }
     }
-
-
-//    @GetMapping("/find/{id}")
-//    public User findUserById(@PathVariable Long id) throws WebException {
-//        try {
-//            return userService.findById(id);
-//        } catch (ServiceException e) {
-//            throw new WebException(e);
-//        }
-//    }
-//
-//    @GetMapping("/find/{login}")
-//    public User findUserById(@PathVariable(value = "login") String login) throws WebException {
-//        try {
-//            return userService.findByLogin(login);
-//        } catch (ServiceException e) {
-//            throw new WebException(e);
-//        }
-//    }
-//
-//    @GetMapping("/find/all")
-//    public List<User> findAllUsers() throws WebException {
-//        try {
-//            return userService.findAll();
-//        } catch (ServiceException e) {
-//            throw new WebException(e);
-//        }
-//    }
-//
-//    @GetMapping("/update")
-//    public void updateUser(Long id, String name) throws WebException {
-//        try {
-//            userService.update(new User());//null?
-//        } catch (ServiceException e) {
-//            throw new WebException(e);
-//        }
-//    }
-//
-//    @GetMapping("/delete/{id}")
-//    public void deleteUser(@PathVariable Long id) throws WebException {
-//        try {
-//            userService.delete(id);
-//        } catch (ServiceException e) {
-//            throw new WebException(e);
-//        }
-//    }
-
-
 
 }

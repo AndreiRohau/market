@@ -26,10 +26,6 @@
     </properties>
 
     <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-actuator</artifactId>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -55,29 +51,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-
-        <!--<dependency>-->
-        <!--<groupId>org.thymeleaf</groupId>-->
-        <!--<artifactId>thymeleaf</artifactId>-->
-        <!--<version>3.0.6.RELEASE</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.thymeleaf</groupId>-->
-        <!--<artifactId>thymeleaf-spring4</artifactId>-->
-        <!--<version>3.0.6.RELEASE</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.thymeleaf.extras</groupId>-->
-        <!--<artifactId>thymeleaf-extras-springsecurity4</artifactId>-->
-        <!--&lt;!&ndash; TODO Remove version once available in platform BOM &ndash;&gt;-->
-        <!--<version>${org.thymeleaf.extras.springsecurity4-version}</version>-->
-        <!--</dependency>-->
-        <!-- thymeleaf-->
-        <!--<dependency>-->
-        <!--<groupId>javax.servlet</groupId>-->
-        <!--<artifactId>servlet-api</artifactId>-->
-        <!--<version>3.1.0</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -92,6 +65,10 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
         </dependency>
     </dependencies>
 

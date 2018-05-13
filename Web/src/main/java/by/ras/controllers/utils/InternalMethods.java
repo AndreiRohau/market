@@ -17,7 +17,6 @@ public class InternalMethods {
         if(objUser instanceof org.springframework.security.core.userdetails.User) {
             org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) objUser;
             role = Role.valueOf(String.valueOf(userDetails.getAuthorities().toArray()[0])).name();
-            log.info(" method=private String getActualRole() : Actual role is " + role);
         }
         return role;
     }
@@ -28,7 +27,6 @@ public class InternalMethods {
         if(objUser instanceof org.springframework.security.core.userdetails.User) {
             org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) objUser;
             role = Role.valueOf(String.valueOf(userDetails.getAuthorities().toArray()[0])).name();
-            log.info(" method=private String getActualRole() : Actual role is " + role);
         }
         return role;
     }
@@ -61,9 +59,9 @@ public class InternalMethods {
         if((p.getDescription() != null) && !(p.getDescription().equals(""))){
             product.setDescription(p.getDescription());
         }
-
         return product;
     }
+
     //initialize empty product
     public static Order initOrderFilter(Order o){
         Order order = new Order();

@@ -6,7 +6,6 @@ import by.ras.WebException.WebException;
 import by.ras.controllers.utils.InternalMethods;
 import by.ras.entity.ProductType;
 import by.ras.entity.particular.Product;
-import by.ras.entity.particular.User;
 import by.ras.exception.ServiceException;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +63,7 @@ public class ProductController {
             Product product = productService.findById(productId);
             model.addAttribute("product", product);
             if(InternalMethods.getRole().equals("ADMIN")){
-                //todo
+                //todo: if deleting already used product (for reserve or order), throws expt.
                 return "market/admin/product";
             }else {
                 return "market/user/product";
@@ -81,24 +80,12 @@ public class ProductController {
         try {
             int OBJECTS_PER_PAGE = 6;
             long maxRows = productService.countRows(); // 42
-            log.info("in service - count rows" + maxRows);
             long maxPage = (maxRows/OBJECTS_PER_PAGE) + (maxRows%OBJECTS_PER_PAGE == 0 ? 0 : 1); //3
-
-            //
             List<Long> pages = new LinkedList<>();
             for(int i = 0; i < maxPage; i++){
                 pages.add(i, maxPage - i);
             }
-
-            log.info("***************************");
             List<Product> products = productService.findAll(new PageRequest((currentPage-1), OBJECTS_PER_PAGE));
-
-            log.info("***************************");
-            log.info("***************************");
-            products.forEach(i -> log.info(i));
-            log.info("***************************");
-            log.info("***************************");
-            log.info("***************************");
             model.addAttribute("products", products);
             model.addAttribute("pages", pages);
             model.addAttribute("current_page", ((long) currentPage));
@@ -110,49 +97,30 @@ public class ProductController {
         }
     }
 
-
     @PostMapping("/market/products/products/{currentPage}")
     public String searchProducts(@ModelAttribute("product") Product product, Model model, @PathVariable("currentPage") int currentPage,
                                HttpServletRequest request) throws WebException {
         try {
-            log.info("in searchProducts method");
-            log.info("***************************");
             //optional if authorized as user - adds to his basket. if as ADMIN - deletes drops to trash =)
             if(request.getParameter("product_id_for_add") != null) {
                 Object objUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
                 String actualRole = InternalMethods.getActualRole(objUser);
                 Product productExecute = productService.findById(Long.valueOf(request.getParameter("product_id_for_add")));
-                log.info(productExecute);
                 if(actualRole.equals("ADMIN")){
                     productService.delete(productExecute.getId());
                 } else {
                     userService.addReserve(InternalMethods.getActualUserId(request), productExecute);
                 }
             }
-            log.info("***************************");
-            log.info("***************************");
             Product filter = InternalMethods.initProductFilter(product);
-            log.info(filter);
-
             int OBJECTS_PER_PAGE = 6;
             long maxRows = productService.countRowsComplex(filter); // 21
-            log.info("max rows " + maxRows);
             long maxPage = (maxRows/OBJECTS_PER_PAGE) + (maxRows%OBJECTS_PER_PAGE == 0 ? 0 : 1); //3
             List<Long> pages = new LinkedList<>();
             for(int i = 0; i < maxPage; i++){
                 pages.add(i, maxPage - i);
             }
-
-            log.info("***************************");
-            log.info("***************************");
             List<Product> products = productService.findAllComplex(filter, new PageRequest((currentPage-1), OBJECTS_PER_PAGE));
-            log.info("size " + products.size());
-            log.info("***************************");
-            log.info("***************************");
-            products.forEach(i -> log.info(i));
-            log.info("***************************");
-            log.info("***************************");
-            log.info("***************************");
             model.addAttribute("post_method", true);
             model.addAttribute("product", product);
             model.addAttribute("products", products);

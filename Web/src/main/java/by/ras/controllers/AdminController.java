@@ -1,6 +1,5 @@
 package by.ras.controllers;
 
-
 import by.ras.ContactService;
 import by.ras.OrderService;
 import by.ras.ProductService;
@@ -107,7 +106,6 @@ public class AdminController {
                     result = "New product have been created.";
                 }else {
                     result = "Product have not been saved. Probably, such model exists.";
-                    log.error(result);
                 }
             } catch (ServiceException e) {
                 throw new WebException(e);
@@ -124,7 +122,6 @@ public class AdminController {
         try {
             int OBJECTS_PER_PAGE = 6;
             long maxRows = userService.countRows(); // 21
-            log.info("max rows" + maxRows);
             long maxPage = (maxRows/OBJECTS_PER_PAGE) + (maxRows%OBJECTS_PER_PAGE == 0 ? 0 : 1); //3
             List<Long> pages = new LinkedList<>();
             for(int i = 0; i < maxPage; i++){
@@ -143,8 +140,6 @@ public class AdminController {
 
     @PostMapping("/admin/manage_clients")
     public String manageClients(Model model) throws WebException {
-        log.info("in manageClients method");
-
         return "market/admin/manage_clients";
     }
 
@@ -176,7 +171,6 @@ public class AdminController {
         }
     }
 
-
     //get clint orders
     @GetMapping(value = "/admin/client_orders/{userId}")
     public String goToClientOrders(Model model, @PathVariable("userId") long userId,
@@ -194,53 +188,36 @@ public class AdminController {
         }
     }
 
-
-
     //inspect client ORDER
     @GetMapping("/admin/order/{orderId}")
     public String goToOrder(Model model, @PathVariable("orderId") long orderId,
                             HttpServletRequest request) throws WebException {
         try {
-
             Order order = orderService.findById(orderId);
             List<Product> products = order.getOrderedProducts();
             long userId = order.getUser().getId();
-
             model.addAttribute("products", products);
             model.addAttribute("orderId", orderId);
             model.addAttribute("user_id", userId);
-
+            return "/market/admin/order";
         } catch (ServiceException e) {
-            e.printStackTrace();
+            throw new WebException(e);
         }
-        return "/market/admin/order";
     }
 
-    //manager of orders ________________
+    //manager of orders
     @GetMapping(value = "/admin/manage_orders/{currentPage}")
     public String goToOrders(@ModelAttribute("product") Order order, Model model, @PathVariable("currentPage") int currentPage,
                                HttpServletRequest request) throws WebException {
         try {
             int OBJECTS_PER_PAGE = 6;
             long maxRows = orderService.countRows(); // 42
-            log.info("in service - count rows" + maxRows);
             long maxPage = (maxRows/OBJECTS_PER_PAGE) + (maxRows%OBJECTS_PER_PAGE == 0 ? 0 : 1); //3
-
-            //
             List<Long> pages = new LinkedList<>();
             for(int i = 0; i < maxPage; i++){
                 pages.add(i, maxPage - i);
             }
-
-            log.info("***************************");
             List<Order> orders = orderService.findAll(new PageRequest((currentPage-1), OBJECTS_PER_PAGE));
-
-            log.info("***************************");
-            log.info("***************************");
-            orders.forEach(i -> log.info(i));
-            log.info("***************************");
-            log.info("***************************");
-            log.info("***************************");
             model.addAttribute("orders", orders);
             model.addAttribute("pages", pages);
             model.addAttribute("current_page", ((long) currentPage));
@@ -256,32 +233,15 @@ public class AdminController {
                                  @PathVariable("currentPage") int currentPage,
                                  HttpServletRequest request) throws WebException {
         try {
-            log.info("in searchOrders method");
-            log.info("***************************");
-            log.info("***************************");
-            log.info("***************************");
             Order filter = InternalMethods.initOrderFilter(order);
-            log.info(filter);
-
             int OBJECTS_PER_PAGE = 6;
             long maxRows = orderService.countRowsComplex(filter); // 21
-            log.info("max rows " + maxRows);
             long maxPage = (maxRows/OBJECTS_PER_PAGE) + (maxRows%OBJECTS_PER_PAGE == 0 ? 0 : 1); //3
             List<Long> pages = new LinkedList<>();
             for(int i = 0; i < maxPage; i++){
                 pages.add(i, maxPage - i);
             }
-
-            log.info("***************************");
-            log.info("***************************");
             List<Order> orders = orderService.findAllComplex(filter, new PageRequest((currentPage-1), OBJECTS_PER_PAGE));
-            log.info("size " + orders.size());
-            log.info("***************************");
-            log.info("***************************");
-            orders.forEach(i -> log.info(i));
-            log.info("***************************");
-            log.info("***************************");
-            log.info("***************************");
             model.addAttribute("post_method", true);
             model.addAttribute("order", order);
             model.addAttribute("orders", orders);
@@ -299,8 +259,6 @@ public class AdminController {
     public String changeOrderStatus(@ModelAttribute("order") Order order, Model model, @PathVariable("orderId") long orderId,
                                     HttpServletRequest request) throws WebException {
         try {
-
-            log.info("in change order status method");
             Order orderToChange = orderService.findById(orderId);
             String orderStatus = orderToChange.getOrderStatus();
             if(orderStatus.equals(OrderStatus.NEW.name())){
@@ -314,52 +272,31 @@ public class AdminController {
             model.addAttribute("order", order);
             if(request.getParameter("change_order_status_trigger").equals("in_manage_orders")){
                 return searchOrders(order, model, Integer.parseInt(request.getParameter("current_page")), request);
-                //return ("redirect:/market/admin/manage_orders/" + request.getParameter("current_page"));
             }else {
                 return goToClientOrders(model, orderToChange.getUser().getId(), request);
-                //("redirect:/market/admin/client_orders/" + order.getUser().getId());
             }
         }catch (ServiceException e){
             throw new WebException(e);
         }
     }
 
-
-//to delete
-//    @GetMapping(value = "/admin/edit_client/{userId}")
-//    public String goToEditClient(Model model, @PathVariable("userId") long userId, HttpServletRequest request) throws WebException {
-//        try{
-//            User user = userService.findById(userId);
-//
-//            model.addAttribute("client", user);
-//            model.addAttribute("user_id", userId);
-//            return "market/admin/edit_client";
-//        }catch (ServiceException e) {
-//            throw new WebException(e);
-//        }
-//    }
-
     //editing profile
     @GetMapping("/admin/edit_client/{userId}")
     public String goToEditClient(@PathVariable("userId") long userId, @Valid @ModelAttribute("user") User user,
                                  @Valid @ModelAttribute("contact") Contact contact, BindingResult bindingResult,
                                  Model model, HttpServletRequest request) throws WebException {
-
         user.setId(userId);
         contact.setId(userId);
         try {
             String result = "";
             result = request.getParameter("result");
-            log.info("user_id " + userId);
             user = userService.findById(userId);
             contact = user.getContact();
-            if(user!=null){log.info("user " + user.toString());log.info("contact " + contact.toString());}
             model.addAttribute("user", user);
             model.addAttribute("contact", contact);
             model.addAttribute("login", user.getLogin());
             model.addAttribute("result", result);
             model.addAttribute("user_id", userId);
-
         } catch (ServiceException e) {
             throw new WebException(e);
         }
@@ -371,38 +308,23 @@ public class AdminController {
     public String editClient(@PathVariable("userId") int userId, @Valid @ModelAttribute("user") User user,
                              BindingResult bindingResultUser, @Valid @ModelAttribute("contact") Contact contact,
                              BindingResult bindingResultContact, Model model, HttpServletRequest request) throws WebException {
-
         user.setId(userId);
         contact.setId(userId);
-        log.info("**************************");
-        log.info("in POST updateUser");
-        log.info(user.toString());
-        log.info(contact.toString());
-        log.info("**************************");
         String result = "";
         try {
             if((contact.getCountry() == null) & (!bindingResultUser.hasErrors())){
-                log.info(user.toString());
                 user = userService.updateByAdmin(user); //null?
-
-                log.info(user.toString());
                 model.addAttribute("user", user);
-                log.info("BindingResult bindingResult DOESNT FACE ERRORS - 1");
                 return "redirect:/market/admin/edit_client/"+userId+"?result=success";
 
             }else if((user.getName() == null) & (!bindingResultContact.hasErrors())){
-                log.info(contact.toString());
                 contact = contactService.editContact(contact);
-                log.info(contact.toString());
                 model.addAttribute("contact", contact);
-                log.info("BindingResult bindingResult DOESNT FACE ERRORS - 2 upd contact");
                 return "redirect:/market/admin/edit_client/"+userId+"?result=success";
             }
         } catch (Exception e) {
             return "redirect:/market/admin/edit_client/"+userId+"?result=incorrect%20login";
         }
-
-        log.info("user_id " + userId);
         try {
             if (contact.getCountry() == null) {
                 contact = userService.findById(userId).getContact();
@@ -410,7 +332,6 @@ public class AdminController {
             } else if(user.getName() == null){
                 user = userService.findById(userId);
                 model.addAttribute("user", user);
-
             }
         }catch (ServiceException e){
             throw new WebException(e);
@@ -425,11 +346,10 @@ public class AdminController {
     @GetMapping("/admin/product/{productId}")
     public String goToEditProduct(@PathVariable("productId") long productId, @Valid @ModelAttribute("product") Product product,
                                  BindingResult bindingResult, Model model, HttpServletRequest request) throws WebException {
-        product.setId(productId);
         try {
+            product.setId(productId);
             String result = "";
             result = request.getParameter("result");
-            log.info("product_id " + productId);
             product = productService.findById(productId);
             model.addAttribute("product", product);
             model.addAttribute("result", result);
@@ -442,20 +362,12 @@ public class AdminController {
     @PostMapping("/admin/product/{productId}")
     public String editProduct(@PathVariable("productId") long productId, @Valid @ModelAttribute("product") Product product,
                              BindingResult bindingResult, Model model, HttpServletRequest request) throws WebException {
-
-        product.setId(productId);
-        log.info("**************************");
-        log.info("in POST updatePRODUCT");
-        log.info(product.toString());
-        log.info("**************************");
-        String result = "";
         try {
+            product.setId(productId);
+            String result = "";
             if((!bindingResult.hasErrors())){
-                log.info(product.toString());
                 product = productService.update(product);
-                log.info(product.toString());
                 model.addAttribute("product", product);
-                log.info("BindingResult bindingResult DOESNT FACE ERRORS");
                 return "redirect:/market/admin/product/" + productId + "?result=success";
             }
             result = "Incorrect input data.";
@@ -465,8 +377,6 @@ public class AdminController {
         } catch (Exception e) {
             return "redirect:/market/admin/product/" + productId + "?result=Exception%20look%20at%20logs";
         }
-
-
     }
 
 }

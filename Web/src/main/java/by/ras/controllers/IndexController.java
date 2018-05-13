@@ -59,26 +59,21 @@ public class IndexController {
         model.addAttribute("date", new Date());
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         model.addAttribute("login", login);
-
         String role = String.valueOf(model.asMap().get("role"));
-        log.info("method=index : Actual role is " + role);
         if((role != null) && !(role.equals("null"))) {
             try {
                 //putting userId into to session!!!!!!
                 long userId = userService.findByLogin(login).getId();
                 request.getSession(true).setAttribute("user_id", userId);
-                log.info("user_id=" + userId + " in INDEX");
                 if (role.matches("CLIENT")) {
                     return "redirect:/market/user/usermain";
                 } else if (role.matches("ADMIN")) {
                     return "redirect:/market/admin/adminmain";
                 }
             } catch (ServiceException e) {
-                log.info("Cant find by Login to get user_id");
                 throw new WebException(e);
             }
         }
-        log.info("user_id="+request.getSession().getAttribute("user_id"));
         return "index";
     }
 
