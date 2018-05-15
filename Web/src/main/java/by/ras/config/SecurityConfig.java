@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                 ;
         http
                 .authorizeRequests()
-                .antMatchers("/market/registration", "/test").anonymous()
+                .antMatchers("/market/registration", "/test", "/").anonymous()
 
                 .antMatchers("/market/products/*").authenticated()
                 .antMatchers("/market/admin/**").hasAuthority("ADMIN")

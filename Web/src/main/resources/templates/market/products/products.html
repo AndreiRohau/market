@@ -14,7 +14,34 @@
 </head>
 <body>
     <div class="well well-sm">
-        <h2 style="text-align:center;">Products</h2>
+        <div class="row">
+            <div class="col-md-3">
+                <p th:if="${role} ne null" th:text="'Acting as ' + ${role}">Acting as ADMIN/CLIENT/ANONYMOUS</p>
+                <p th:if="${role} eq null" th:text="'Acting as ANONYMOUS'">Acting as ADMIN/CLIENT/ANONYMOUS</p>
+            </div>
+            <div class="col-md-6">
+                <h2 style="text-align:center;" th:text="#{loc.products}">PRODUCTS-TMPLT</h2>
+            </div>
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-3">
+                        <form action="?" method="get">
+                            <button class="btn btn-default" type="submit" name="lang" value="en_EN" th:text="#{loc.btn.en}">EN-TMPLT</button>
+                        </form>
+                    </div>
+                    <div class="col-md-3">
+                        <form action="?" method="get">
+                            <button class="btn btn-default" type="submit" name="lang" value="ru_RU" th:text="#{loc.btn.ru}">РУ-TMPLT</button>
+                        </form>
+                    </div>
+                    <div class="col-md-3">
+                        <form action="/logout" method="GET">
+                            <button type="submit" class="btn btn-default" th:text="#{loc.btn.log.out}">LOG-OUT-TMPLT</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- HEADER END -->
